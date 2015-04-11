@@ -1,0 +1,159 @@
+<include file="public/service_header"/>
+
+<script type="text/javascript">
+var id=34;
+var true_url="{:U('Url/url/saveurl')}";
+$(function(){
+	$('.cckefu').click(function(){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/getMa')}",
+			data:"uid={$Think.cookie.uid}&keid="+$(this).attr('value')+"&ktype=1",
+		});
+	});
+	$('.qqkefu').click(function(){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/getMa')}",
+			data:"uid={$Think.cookie.uid}&keid="+$(this).attr('value')+"&ktype=2"
+		});
+	});
+	$('.wwkefu').click(function(){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/getMa')}",
+			data:"uid={$Think.cookie.uid}&keid="+$(this).attr('value')+"&ktype=3"
+		});
+	});
+	$('.wxkefu').click(function(){
+		$.ajax({
+			type:'post',
+			url:"{:U('Index/getMa')}",
+			data:"uid={$Think.cookie.uid}&keid="+$(this).attr('value')+"&ktype=4"
+		});
+	});
+});
+</script>
+
+<div class="kf_main">
+  <ul class="crumbs">
+    您所在的位置：<a href="{:U('Index/index')}">首页</a> &gt; 客服中心
+  </ul>
+  <div class="clear"></div>
+  <div class="online">
+    <div class="pub_box">
+      <ul class="filter" id="tits">
+        <li onClick="settab(1)" class="cur">买商标</li>
+        <li onClick="settab(2)">卖商标</li>
+        <li onClick="settab(3)">商标注册</li>
+      </ul>
+      <div class="pub_linebox">
+        <ul class="online_box" id="con_1">
+<foreach name="ccbuy" item="vo">
+<li class="cckefu" value="{$vo.id}" onclick="window.open('http://kefu.qycn.com/vclient/chat/?websiteid=91819&amp;clerkid={$vo.cc}&amp;clienturl=http%3A//www.hw-tm.co/','_blank', 'toolbar=no,scrollbars=no,menubar=no,status=no,resizable=yes,location=no')" style='border:none;cursor:pointer'><a href=""><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--cc客服结束-->
+
+<foreach name="qqbuy" item="vo">
+<li class="qqkefu" value="{$vo.id}"><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$vo.qq}&site=qq&menu=yes"><i></i><span>{$vo.name}</span><em>QQ:{$vo.qq}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--qq客服结束-->
+
+<foreach name="wwbuy" item="vo">
+<li class="wwkefu" value="{$vo.id}"><a target="_blank" href="http://www.taobao.com/webww/ww.php?ver=3&touid={$vo.ali}&siteid=cntaobao&status=1&charset=utf-8" ><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--阿里旺旺结束-->
+
+<foreach name="wxbuy" item="vo">
+<li class="wxkefu" value="{$vo.id}"><a href="#" onclick="javascript:void(0)"><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--微信客服结束-->
+
+          <div class="clear"></div>
+        </ul>
+
+        <ul class="online_box" id="con_2" style="display:none;">
+
+<foreach name="ccsell" item="vo">
+<li class="cckefu" value="{$vo.id}" onclick="window.open('http://kefu.qycn.com/vclient/chat/?websiteid=91819&amp;clerkid={$vo.cc}&amp;clienturl=http%3A//www.hw-tm.co/','_blank', 'toolbar=no,scrollbars=no,menubar=no,status=no,resizable=yes,location=no')" style='border:none;cursor:pointer'><a href=""><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--cc客服结束-->
+<foreach name="qqsell" item="vo">
+<li class="qqkefu" value="{$vo.id}"><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$vo.qq}&site=qq&menu=yes"><i></i><span>{$vo.name}</span><em>QQ:{$vo.qq}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--qq客服结束-->
+
+<foreach name="wwsell" item="vo">
+<li class="wwkefu" value="{$vo.id}"><a target="_blank" href="http://www.taobao.com/webww/ww.php?ver=3&touid={$vo.ali}&siteid=cntaobao&status=1&charset=utf-8" ><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--阿里旺旺结束-->
+
+<foreach name="wxsell" item="vo">
+<li class="wxkefu" value="{$vo.id}"><a href=""><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--微信客服结束-->
+          <div class="clear"></div>
+        </ul>
+
+        <ul class="online_box" id="con_3" style="display:none;">
+
+<foreach name="ccreg" item="vo">
+<li class="cckefu" value="{$vo.id}" onclick="window.open('http://kefu.qycn.com/vclient/chat/?websiteid=91819&amp;clerkid={$vo.cc}&amp;clienturl=http%3A//www.hw-tm.co/','_blank', 'toolbar=no,scrollbars=no,menubar=no,status=no,resizable=yes,location=no')" style='border:none;cursor:pointer'><a href=""><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--cc客服结束-->
+
+<foreach name="qqreg" item="vo">
+<li class="qqkefu" value="{$vo.id}"><a target="_blank" href="http://wpa.qq.com/msgrd?v=3&uin={$vo.qq}&site=qq&menu=yes"><i></i><span>{$vo.name}</span><em>QQ:{$vo.qq}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--qq客服结束-->
+
+<foreach name="wwreg" item="vo">
+<li class="wwkefu" value="{$vo.id}"><a target="_blank" href="http://www.taobao.com/webww/ww.php?ver=3&touid={$vo.ali}&siteid=cntaobao&status=1&charset=utf-8" ><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--阿里旺旺结束-->
+<foreach name="wxreg" item="vo">
+<li class="wxkefu" value="{$vo.id}"><a href=""><i></i><span>{$vo.name}</span><em>工号{$vo.sno}</em></a></li>
+</foreach>
+		  <div class="clear"></div>
+          <!--微信客服结束-->
+          <div class="clear"></div>
+        </ul>
+        <script>
+function settab(n){
+tli=document.getElementById('tits').getElementsByTagName("li");
+for(i=0;i<tli.length;i++){
+k=i+1
+if (k==n){
+tli[i].className="cur";
+document.getElementById('con_'+k).style.display="";	
+}else{
+tli[i].className="";
+document.getElementById('con_'+k).style.display="none";
+}
+}
+}
+</script> 
+      </div>
+    </div>
+  </div>
+  <div class="clear"></div>
+</div>
+<!--底部-->
+<div id="footer">
+<include file="public/footbox" />
+</div>
+<!--底部 end-->
+
+</body>
+</html>

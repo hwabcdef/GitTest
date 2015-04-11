@@ -1,0 +1,6 @@
+<volist name='re' id='vo'>
+<php>
+	$checked=(in_array($vo['group_id'],$checked1))?'checked="checked"':'';
+</php>
+	<label><input type="checkbox" getkey='25group' name="25group[]" owkey='12' value="{$vo.group_id}" {$checked} />【{$vo.group_id}】 - {$vo.title}</label>
+</volist>

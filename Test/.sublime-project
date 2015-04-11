@@ -1,0 +1,17 @@
+{
+	"folders":
+	[
+		{
+			"path": "/D/wamp/www/Test"
+		}
+	],
+	"settings": {
+        "xdebug": {
+			"path_mapping": {},
+			"url": "http://localhost/Test/test.php",
+			"super_globals": true,
+			"close_on_stop": true,
+			"port": 9001
+		}
+    }
+}

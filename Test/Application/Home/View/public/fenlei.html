@@ -1,0 +1,38 @@
+<volist name='fenlei' id='vo' offset='0' length='2' key="k">
+<h4 class="t{$k}">{$vo.self.name}</h4>
+<volist name='vo.down' id='vod'>
+	<div class="item bo">
+<h3><span>·</span><a>{$vod.self.name}</a></h3>
+<div class="item-list clearfix">
+<div class="subitem">
+<volist name='vod.down' id='vodd'>
+	<dl>
+	<dt></dt>
+	<dd>
+	<foreach name='vodd.down' item='voddd'>
+	
+		<em><a href="{:U('Index/indeustry',array('id'=>$voddd['id']))}">{$voddd.name}</a><dfn>
+			<php>
+				$conditions=json_decode($voddd['conditions'],true);
+				if($conditions['category'] || $conditions['25group']){
+					echo '(';
+					if($conditions['category']){
+					echo $conditions['category'].'类';
+					};
+					if($conditions['25group']){
+					echo $conditions['25group'];
+					};
+					echo ')';
+				}
+			</php>
+
+		</dfn></em>
+	</foreach>
+	</dd>
+	</dl>
+</volist>
+</div>
+</div>
+</div>
+</volist>
+</volist>

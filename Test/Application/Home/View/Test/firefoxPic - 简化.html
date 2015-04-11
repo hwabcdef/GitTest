@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$tmpl_info.title}</title>
+<meta name="Keywords" content="{$tmpl_info.keywords}" />
+<meta name="Description" content="{$tmpl_info.description}" />
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/main.css">
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/tmStyle.css">
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/ion.rangeSlider.css"/>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/common.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/ion.rangeSlider.js"></script>
+<script type='text/javascript' src="{:C('HTMLPATH')}js/dropdown.js"></script>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+</head>
+<body>
+<div class="mainbox">
+
+<div id="tmleftbox"><div class="resultbox"><div class="home_hot" >
+<ul class="logo_img">
+<!-- 列表信息  -->
+<volist name='info' id='vo'>
+
+<li><span class="slipbox" data-kone="c"><div class="lop">
+
+<if condition="$Think.session.id gt 0">
+ID：{$vo.tm_id}
+	<if condition="$vo['tm_categories'] eq 25">
+	<else />
+<php>
+$data=$vo['price_group']?$vo['price_group']:getprices($vo['tm_price']);
+$urlname='Index/quxiantu?data='.$data.'&date='.$date;
+		if($vo[tm_price] > 0){
+</php>
+
+
+<!--
+第一种方式是：
+<div class="sub_nav"> => <div class="sub_nav" style="display:block;">
+<em class="main_nav" onmouseover="showSubNav(this);" onmouseout="hideSubNav(this);">查看价格曲线
+	<div class="sub_nav">
+<div class="a">
+	<h4>价格曲线（单位：万元）</h4>
+<iframe src="{:U($urlname)}" scrolling="no" frameborder="0" width="100%" height="300" id="mainFrame" ></iframe>
+</div>
+	</div>
+</em>
+-->
+
+<em class="main_nav" onmouseover="showSubNav(this);" onmouseout="hideSubNav(this);">查看价格曲线
+<div class="sub_nav">
+<div class="a">
+<h4>价格曲线（单位：万元）</h4>
+<iframe src="{:U($urlname)}" scrolling="no" frameborder="0" width="100%" height="300" id="mainFrame" onload=''></iframe>
+</div>
+</div>
+</em>
+<!--
+原有的：
+<em class="main_nav" onmouseover="showSubNav(this);" onmouseout="hideSubNav(this);">查看价格曲线
+<div class="sub_nav">
+<div class="a">
+<h4>价格曲线（单位：万元）</h4>
+<iframe src="'.U($urlname).'" scrolling="no" frameborder="0" width="100%" height="300" id="mainFrame" onload=\'IFrameReSize("mainFrame");IFrameReSizeWidth("mainFrame");\'></iframe>
+</div>
+</div>
+</em>
+-->
+<php>}else{</php>
+	<em class="main_nav">面议</em>
+<php>}</php>
+	</if>
+<else />ID：{$vo.tm_id}
+<em href="###" class="main_nav" onclick="showDiv('loginPop')">登录查看价格</em>
+</if>
+
+</div></span></li>
+
+</volist>
+<!-- 列表信息 结束 -->
+</ul> 
+
+</div></div></div>
+</div>
+</body>
+</html>

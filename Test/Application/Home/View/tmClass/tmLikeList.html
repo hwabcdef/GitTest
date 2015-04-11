@@ -1,0 +1,988 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$tmpl_info.title}</title>
+<meta name="Keywords" content="{$tmpl_info.keywords}" />
+<meta name="Description" content="{$tmpl_info.description}" />
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/main.css">
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/tmStyle.css">
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/ion.rangeSlider.css"/><!--滑块样式-->
+<script type="text/javascript" src="{:C('HTMLPATH')}js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/common.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/ion.rangeSlider.js"></script>
+<script type='text/javascript' src="{:C('HTMLPATH')}js/dropdown.js"></script>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<script type="text/javascript">
+var trace_page_on = "{$trace_page_arr.on}";
+if(trace_page_on){
+function trace_close_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+function trace_update_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"type=1&id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+window.onbeforeunload = function(){
+	trace_close_time();
+}
+var time_limit_tmp = "{$trace_page_arr.limit_time|default=10000}";
+time_limit_tmp = parseInt(time_limit_tmp);
+time_limit_tmp = time_limit_tmp * 1000;
+setInterval(trace_update_time, time_limit_tmp);
+}
+</script>
+</head>
+
+<body>
+<!--登录-->
+<include file="public/dlogin" />
+<!--登录 end-->
+
+<!--图形编码-->
+<div id="graphicPop" class="ondiv" style="display:none;">
+<div id="container"></div>
+
+<div class="content">
+<h2><span class="close"><input type="button" id="" value="" class="closebtn" title="关闭" subkey='25code' /></span>选择图形编码</h2>
+<ul class="tree">
+<volist name='txcode' id='vo'>
+<php>
+	$checked=(in_array($key,explode(',',$con['25code'])))?'checked="checked"':'';
+</php>
+<li><label><input type="checkbox" getkey='25code' owkey='13' value="{$key}" {$checked}> {$key} {$vo.name}</label>
+<ul style="display:none;" attr_ul='toggle_ul'>
+<php>$upkey=$key;</php>
+<volist name='vo.down' id='vod'>
+<li>{$upkey}.{$key} {$vod}</li>	
+</volist>
+</ul>
+</li>
+</volist>
+</ul>
+<p class="ptrbtm"><input type="button" subkey='unlimi'  unkey='13' value="不限" class="btn"  style='margin-right:10px;'/><input type="button" subkey='25code' value="确定" class="btn"  /></p>
+</div>
+</div>
+<!--图形编码 end-->
+<div class="header">
+<div id="site-nav">
+<ul class="leftsite">
+<include file="public/usersession" />
+<include file="public/header_nav" />
+</div>
+
+<div class="clear"></div>
+
+<include file="public/header" />
+
+<div class="clear"></div>
+<!--导航 Start-->
+<div class="menubox">
+<div class="all-sort1">
+<h2 id="div_h2" >适用行业分类 <img id="img1" src="{:C('HTMLPATH')}images/ico_down.png" align="absmiddle"></h2>
+<div class="showbox" id="tip1" style="display:none;">
+<!--所有分类 Start-->
+<div class="all-sort-list">
+<include file="public/fenlei" />
+</div>
+<!--所有分类 End-->
+</div>
+</div>
+<div class="nav">
+<ul class="clearfix">
+<include file="public/nav" />
+</ul>
+</div>
+</div>
+<!--导航 End-->
+</div>
+<script type="text/javascript">
+
+function owkey(){
+	var b='';
+	var k=0;
+	$('[owkey]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+					var owk_int = $(this).attr('owkey');
+					owk_int = parseInt(owk_int);
+					if(owk_int>8){
+						return true;
+					}
+    					if(k<6){
+    						b=b+'<i>'+$(this).parent().text()+'</i>';
+    					}else{
+    						if(k==6){
+    							b=b+'<i>...</i>';
+    						}
+    					}
+    					k=k+1;
+    			}
+		});
+		if(b==''){
+			$('#25lei_text').html('<i>暂无选择条件</i>');	
+		}else{
+			$('#25lei_text').html('<b style="color:#f30;">'+b+'</b>');
+		}
+}
+function sag25(v){
+		var a='';
+		var b='';
+		var k=0;
+		$('[getkey=25service]').each(function(){
+			if($(this).val()!='如：手机'){
+    					a=a+'<i>'+$(this).val()+'</i>';
+			}
+		});
+		if(a==''){
+			$('[getkey=25group]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+    					if(k<4){
+    						b=b+'<i>'+$(this).val()+'</i>';
+    					}else{
+    						if(k==4){
+    							b=b+'<i>...</i>';
+    						}
+    					}
+    					k=k+1;
+    			}
+			});
+			if(b==''){
+				if(v==1){
+					che='{$con.25group}';
+					if(che!=''){
+						che=che.replace(',','</i><i>');
+						che='<i>'+che+'</i>';
+						$('#25sag').html(che);						
+					}else{
+						$('#25sag').html('<i>暂无定义</i>');
+					}
+				}else{
+					$('#25sag').html('<i>暂无定义</i>');
+				}
+			}else{
+				$('#25sag').html('<b style="color:#f30;">'+b+'</b>');
+			}
+			
+		}else{
+			$('#25sag').html('<b style="color:#f30;">'+a+'</b>');
+		}
+}
+function sbtype(){
+	var b='';
+	$('#ch_num').hide();
+	$('#en_num').hide();
+	$('#chaxuntuxing').hide();
+	$('[key]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+    				var name=$(this).attr('name');
+    				switch(name){
+    					case 'chun_ch':
+    						$('#ch_num').show();
+    						break;
+    					case 'chun_en':
+    						$('#en_num').show();
+    						break;
+    					case 'chun_tx':
+    						$('#chaxuntuxing').show();
+    						break;
+    					case 'chinese':
+    						$('#ch_num').show();
+    						break;
+    					case 'english':
+    						$('#en_num').show();
+    						break;
+    					case 'tuxing':
+    						$('#chaxuntuxing').show();
+    						break;
+    				}
+    						if(b==''){
+    							b=$(this).parent().text();
+    						}else{
+    							b=b+','+$(this).parent().text();
+    						}	
+    			}
+		});
+		if(b==''){
+			$('#sbtype').html('商标类型（中文/英文/图形/数字）');	
+		}else{
+			$('#sbtype').html('<b style="color:#f30;">'+"已选择 "+b+'</b>');
+		}
+}
+function ch_num(){
+	var b='';
+		$('[name=ch_num]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+    						if(b==''){
+    							b=$(this).parent().text();
+    						}else{
+    							b=b+','+$(this).parent().text();
+    						}	
+    			}
+		});
+		if(b==''){
+			$('#ch_num').html('汉字字数');	
+		}else{
+			if($('[name=hzall]').attr('checked')=='checked'){
+				b=b+"(包含以上)";
+			}
+			$('#ch_num').html('<b style="color:#f30;">'+"已选择 "+b+'</b>');
+		}
+}
+function en_num(){
+	var b='';
+		$('[name=en_num]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+    						if(b==''){
+    							b=$(this).parent().text();
+    						}else{
+    							b=b+','+$(this).parent().text();
+    						}	
+    			}
+		});
+		if(b==''){
+			$('#en_num').html('字母字数');	
+		}else{
+			if($('[name=zmall]').attr('checked')=='checked'){
+				b=b+"(包含以上)";
+			}
+			$('#en_num').html('<b style="color:#f30;">'+"已选择 "+b+'</b>');
+		}
+}
+function regdate(){
+	var b='';
+		$('[name=regdate]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+    						if(b==''){
+    							b=$(this).parent().text();
+    						}else{
+    							b=b+','+$(this).parent().text();
+    						}	
+    			}
+		});
+		if(b==''){
+			$('#regdate').html('注册年限');	
+		}else{
+			$('#regdate').html('<b style="color:#f30;">'+"已选择 "+b+'</b>');
+		}
+}
+function cate(k){
+	    	var a='';
+	    	var k=<if condition='$con.25group neq ""'>1<else/>0</if>;
+    		$('[checkedkey=cate]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+    				if(a==''){
+    					a=$(this).val();
+    				}else{
+    					if(k<4){
+    						a=a+','+$(this).val();
+    					}
+    					if(k==4){
+    						a=a+',...';
+    					}
+    					k=k+1;
+    					
+    				}
+    			}
+    		});
+    		if(a==''){
+				$('#category_text').html('未选择商标分类');
+    		}else{
+    			$('#category_text').html('已选择了'+a+'类');
+    		}
+    		if(a=="25"){
+    			openP('more50', 50, 50, 'more');
+    		}else{
+    			$('#more50').hide();
+    		}
+    		if(k==1){
+    			che='{$con.25group}';
+    		}else{
+    			var b='';
+    			$('[getkey=25group]').each(function(){
+	    			if($(this).attr('checked')=='checked'){
+	    				if(b==''){
+	    					b=$(this).val();
+	    				}else{
+	    					b=b+','+$(this).val();
+	    				}
+	    			}
+			});
+    			che=b;
+    		}
+    		$.get("{:U('Index/getqunzu')}?cate="+a+"&checked="+che,function(data,status){
+				    $('#qunzu').html(data);
+				  });
+}
+<php>
+	$price=explode(',',$con['price']);
+</php>
+$(document).ready(function(){
+	var k1={$price.0|default=0};
+	var k2={$price.1|default=50};
+		if(k1==0 && k2==50){
+
+		}else{
+			$('.irs-min').show();
+			$('.irs-max').show();
+		}
+    	$('.irs-from').text(k1);
+    	$('.irs-to').text(k2);
+    	var a1=8+k1*3.72+'px';
+    	var a2=(194-(k1*3.72)-(50-k2)*3.72)+'px';
+    	var a3=(194-(50-k2)*3.72)+'px';
+    	var a4=k1*3.72+'px';
+    	var a5=3+k1*3.66+'px';
+    	var a6=(186-(50-k2)*3.66)+'px';
+    	$('.irs-diapason').css({'left':a1,'width':a2});
+    	$('.irs-slider.from').css('left',a4);
+    	$('.irs-slider.to').css('left',a3);
+    	$('.irs-from').css('left',a5);
+    	$('.irs-to').css('left',a6);
+	cate(1);
+	owkey();
+	sag25(1);
+	sbtype();
+	ch_num();
+	en_num();
+	regdate();
+	var k25={$owkey};
+	if(k25==1){
+		$('#more50').show();
+	}
+	//初始化
+	$('[subkey=25lei]').click(function(){
+		owkey();
+		closeDiv('fzPop');
+	});
+	$('[unkey]').click(function(){
+		var a=$(this).attr("unkey");
+		$('[owkey='+a+']').removeAttr('checked');
+            ch_num();
+            en_num();
+            regdate();
+	});
+	$('[name=ch_num]').click(function(){
+		ch_num();
+	})
+	$('[name=hzall]').click(function(){
+		ch_num();
+	})
+	$('[name=en_num]').click(function(){
+		en_num();
+	})
+	$('[name=zmall]').click(function(){
+		en_num();
+	})
+	$('[name=regdate]').click(function(){
+		regdate();
+	})
+	$('[subkey=25service]').click(function(){
+		sag25(0);
+		closeDiv('groupPop');
+	});
+	$('[subkey=25code]').click(function(){
+		var a='';
+		$('[getkey=25code]').each(function(){
+    			if($(this).attr('checked')=='checked'){
+    				if(a==''){
+    					a=$(this).val();
+    				}else{
+    					a=a+','+$(this).val();
+    				}
+    			}
+    		});
+		$('[name=25code]').val(a);
+		closeDiv('graphicPop'); 
+	});
+    $('[key]').click(function(){
+            if($(this).attr('key')==1){
+                var name=$(this).attr('name');
+                $('[key]').each(function(){
+                    if($(this).attr('name') != name){
+                        $(this).removeAttr('checked');
+                    }
+                });
+            }
+            if($(this).attr('key')==2){
+                $('[key=1]').each(function(){
+                        $(this).removeAttr('checked');
+                });
+            }
+            sbtype();
+        });
+    $('[checkedkey=cate]').each(function(){
+    	$(this).click(function(){
+    	cate(0);
+    	})
+    });
+	$('[getkey=25code]').click(function(){
+		var ul = $(this).parent().parent().find('ul');
+		if(!$(this).attr('checked')){
+			//ul.show();
+			ul.toggle('slow');
+		}else{
+			//ul.hide();
+			ul.toggle('slow');
+		}
+	});
+	$('[attr_ul=toggle_ul]').click(function(){$(this).toggle('slow');});
+});
+
+</script>
+<form action='{:U("Index/search")}' method="post" />
+<!--定义群组-->
+<div id="groupPop" class="ondiv" style="display:none;">
+<div class="content">
+<script type="text/javascript">
+$(function(){
+// 选择控制
+$("#qunzu").click(function(){
+	chk_status(2);
+});
+// 输入控制
+$("[getkey=25service]").change(function(){
+	chk_status(1);
+});
+// 选择和输入只能选择一种控制
+function chk_status(type){
+	if(!type){return ;}
+	if(type == 1){
+		var chk = false;
+		$("[getkey=25service]").each(function(){
+			var val = $(this).attr('value');
+			var def = $(this).attr('attr_val');
+			if(val && val != def){
+				chk = true;
+				return false;
+			}
+		});
+		$("#qunzu").find('input').each(function(){
+			$(this).attr('disabled', chk);
+		});
+		return ;
+	}
+	if(type==2){
+		var chk = false;
+		$('[getkey=25group]').each(function(){
+			if($(this).attr('checked')=='checked'){
+				chk = true; return false;
+			}
+		});
+		$("[getkey=25service]").each(function(){
+			$(this).attr('disabled', chk);
+		});
+		return ;
+	}
+}
+});
+</script>
+<h2><span class="close"><input type="botton" id="" value="" subkey='25service' class="closebtn" title="关闭" /></span>选择群组</h2>
+<ul class="cluster">
+<div class="note">请选择直接输入服务或选择群组号(服务优先)：</div>
+<div class="gro">包含具体商标/服务：
+<php>
+    if($con['25service']){
+    $servicelist=explode(',',$con['25service']);
+    }
+    for($i=0;$i<5;$i++){
+        if(!$servicelist[$i]){
+            $servicelist[$i]='';
+        }
+    }
+</php>
+<volist name='servicelist' id='vo'>
+  <input type="text" value="{$vo | default='如：手机'}" name='25service[]' getkey='25service' onfocus="if(this.value==this.attributes.attr_val.value)this.value='';" onblur="if(!this.value)this.value=this.attributes.attr_val.value;" attr_val="如：手机"/>  
+</volist>
+</div>
+
+<div id='qunzu'>
+	<center>还未选择分类</center>
+</div>
+<div class="clear"></div>
+</ul>
+<p class="ptrbtm"><input type="button" subkey='unlimi'  unkey='12' value="不限" class="btn"  style='margin-right:10px;'/><input type="button" subkey='25service' value="确定" class="btn"  /></p>
+</div>
+</div>
+<!--定义群组 end-->
+<!--25类条件-->
+<div id="fzPop" class="ondiv" style="display:none;">
+<div class="content">
+<h2><span class="close"><input type="button" id="" subkey='25lei' value="" class="closebtn" title="关闭" /></span>25类适应风格类型搜索</h2>
+<ul>
+<dl>
+<dt>适合性别</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='1' class="on">不限</label></dd>
+<dd><label><input type="checkbox" owkey='1' name='man' <eq name="con.man" value='1'>checked</eq> value="1"/> 男性</label></dd>
+<dd><label><input type="checkbox" owkey='1' name='women' <eq name="con.women" value='1'>checked</eq> value="1" /> 女性</label></dd>
+<dd><label><input type="checkbox" owkey='1' name='normal' <eq name="con.normal" value='1'>checked</eq> value="1" /> 中性</label></dd>
+</dl>
+<dl>
+<dt>大类风格</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='2' class="on">不限</label></dd>
+<dd><label><input type="checkbox" owkey='2' name='europe' <eq name="con.europe" value='1'>checked</eq> value="1" /> 欧式</label></dd>
+<dd><label><input type="checkbox" owkey='2' name='tradition' <eq name="con.tradition" value='1'>checked</eq> value="1" /> 传统</label></dd>
+</dl>
+<dl>
+<dt>适合产品</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='3' class="on">不限</label></dd>
+<dd><label><input type="checkbox" owkey='3' name="clothes" <eq name="con.clothes" value='1'>checked</eq> value="1" /> 服装</label></dd>
+<dd><label><input type="checkbox" owkey='3' name="shoes" <eq name="con.shoes" value='1'>checked</eq> value="1" /> 鞋类</label></dd>
+<dd><label><input type="checkbox" owkey='3' name="kids" <eq name="con.kids" value='1'>checked</eq> value="1" /> 童装</label></dd>
+</dl>
+<dl>
+<dt>产品风格</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='4' class="on">不限</label></dd>
+<dd><label><input type="checkbox" owkey='4'  name="formal" <eq name="con.formal" value='1'>checked</eq> value="1" /> 正装/皮鞋/商务</label></dd>
+<dd><label><input type="checkbox" owkey='4' name="relax" <eq name="con.relax" value='1'>checked</eq> value="1"/> 休闲</label></dd>
+<dd><label><input type="checkbox" owkey='4' name="sport" <eq name="con.sport" value='1'>checked</eq> value="1"/> 运动</label></dd>
+<dd><label><input type="checkbox" owkey='4'  name="tide" <eq name="con.tide" value='1'>checked</eq> value="1"/> 潮流/现代</label></dd>
+<dd><label><input type="checkbox" owkey='4'  name="rihan" <eq name="con.rihan" value='1'>checked</eq> value="1"/> 日韩/卡娃依</label></dd>
+<dd><label><input type="checkbox" owkey='4'  name="nation" <eq name="con.nation" value='1'>checked</eq> value="1"/> 民族/古典</label></dd>
+<dd><label><input type="checkbox" owkey='4'  name="street" <eq name="con.street" value='1'>checked</eq> value="1"/> 街头/嬉皮士</label></dd>
+<dd onclick="openP('more3', 3, 5, 'more')" class="more">更多<span id="state3" class="arrow-down"></span></dd>
+<div class="subContent" id="more3" style="display:none;">
+<ul>
+<li><label><input type="checkbox" owkey='4'  name="tongqin" <eq name="con.tongqin" value='1'>checked</eq> value="1"/> 通勤/OL</label></li>
+<li><label><input type="checkbox" owkey='4'  name="china" <eq name="con.china" value='1'>checked</eq> value="1"/> 中华元素</label></li>
+<li><em class="other"><label><input type="checkbox" owkey='' name="qinlv" <eq name="con.qinlv" value='1'>checked</eq> value="1"/> 波西米亚/情侣/小调</label></em></li>
+</ul>
+</div>
+</dl>
+<dl>
+<dt>服装产品</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='5' class="on">不限</label></dd>
+<dd><label><input type="checkbox" owkey='5' name="underwear" <eq name="con.underwear" value='1'>checked</eq> value="1"/> 内衣/卫衣</label></dd>
+<dd><label><input type="checkbox" owkey='5' name="down" <eq name="con.down" value='1'>checked</eq> value="1"/> 羽绒/毛衣/针织</label></dd>
+<dd><label><input type="checkbox" owkey='5' name="uniform" <eq name="con.uniform" value='1'>checked</eq> value="1"/> 制服/工作服</label></dd>
+<dd><label><input type="checkbox" owkey='5' name="leather" <eq name="con.leather" value='1'>checked</eq> value="1"/> 皮衣/西装/衬衫</label></dd>
+<dd><label><input type="checkbox" owkey='5' name="pants" <eq name="con.pants" value='1'>checked</eq> value="1"/> 裤子</label></dd>
+<dd><label><input type="checkbox" owkey='5' name="skirt" <eq name="con.skirt" value='1'>checked</eq> value="1"/> 裙子</label></dd>
+<dd><label><input type="checkbox" owkey='5' name="elder" <eq name="con.elder" value='1'>checked</eq> value="1"/> 中老年服装</label></dd>
+<dd onclick="openP('more4', 4, 5, 'more')" class="more">更多<span id="state4" class="arrow-down"></span></dd>
+<div class="subContent" id="more4" style="display:none;">
+<ul>
+<li><label><input type="checkbox" owkey='' name="jeans" <eq name="con.jeans" value='1'>checked</eq> value="1"/> 牛仔</label></li>
+<li><label><input type="checkbox" owkey='' name="other" <eq name="con.other" value='1'>checked</eq> value="1"/> 其它</label></li>
+</ul>
+</div>
+</dl>
+<dl>
+<dt>鞋类产品</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='6' class="on">不限</label></dd>
+<dd><label><input type="checkbox" owkey='6' name="sneaker" <eq name="con.sneaker" value='1'>checked</eq> value="1"/> 波鞋/运动鞋</label></dd>
+<dd><label><input type="checkbox" owkey='6' name="slipper" <eq name="con.slipper" value='1'>checked</eq> value="1"/> 拖鞋/家居鞋</label></dd>
+<dd><label><input type="checkbox" owkey='6' name="workshoes" <eq name="con.workshoes" value='1'>checked</eq> value="1"/> 功能鞋/工作鞋</label></dd>
+</dl>
+<dl>
+<dt>童装产品</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='7' class="on">不限</label></dd>
+<dd><label><input type="checkbox" owkey='7' name="midchild" <eq name="con.midchild" value='1'>checked</eq> value="1"/> 中童</label></dd>
+<dd><label><input type="checkbox" owkey='7' name="youngchild" <eq name="con.youngchild" value='1'>checked</eq> value="1" /> 幼童</label></dd>
+<dd><label><input type="checkbox" owkey='7' name="cartoon" <eq name="con.cartoon" value='1'>checked</eq> value="1"/> 卡通</label></dd>
+<dd><label><input type="checkbox" owkey='7' name="fairy" <eq name="con.fairy" value='1'>checked</eq> value="1"/> 童话故事</label></dd>
+</dl>
+<dl>
+<dt>商标特点</dt>
+<dd class="unlimi"><label subkey='unlimi' unkey='8' class="on">不限</label></dd>
+<dd class="o1"><label><input type="checkbox" owkey='8' name="foreign" <eq name="con.foreign" value='1'>checked</eq> value="1"/> 有外文商标（除英文外）</label></dd>
+<dd class="o1"><label><input type="checkbox" owkey='8'  name="story" <eq name="con.story" value='1'>checked</eq> value="1"/> 有商标故事</label></dd>
+<dd class="o1"><label><input type="checkbox" owkey='8' name="tophigh" <eq name="con.tophigh" value='1'>checked</eq> value="1"/> 跟国际大牌商标擦边</label></dd>
+<dd class="o1"><label><input type="checkbox" owkey='8' name="common" <eq name="con.common" value='1'>checked</eq> value="1"/> 跟有名的商标擦边</label></dd>
+</dl>
+<div class="clear"></div>
+<p><input type="button" name="Submit" value="确定" subkey='25lei' class="btn" /></p>
+</ul>
+</div>
+</div>
+<!--25类条件 end-->
+<div class="mainbox">
+<ul id="crumbs">您所在的位置：<a href="{:C('INDEXPATH')}">首页</a> &gt; {$bread_nav}</ul>
+<!--商标搜索-->
+<div class="s_tabox">
+<div class="title">
+<dl>
+<dt class="hover"><span id='category_text'>{$category_text | default='未选择商标分类'}</span> <span class="slipbox" data-kone="b1"><a href="###">点击选择商标类型</a>
+<div class="slipmore" style='display:none'>
+<div class="mold">
+<h4>请选择商标类型</h4>
+<ul>
+<volist name='sblist' id='vo' >
+<php>
+	$checked=(in_array($key,explode(',',$con['category'])))?'checked="checked"':'';
+</php>
+<eq name='key' value='25' >
+<label><input  checkedkey='cate' type="checkbox" name="category[]" value="{$key}" {$checked}/> <span>第25类</span></label>
+<else />
+<label><input checkedkey='cate' type="checkbox" name="category[]" value="{$key}" {$checked}/>第{$key}类</label>
+</eq>
+</volist>
+
+
+</ul>
+
+</div>
+</div>
+</span></dt>
+<dt class="ot1"><a href="{:U('Index/sameSearch')}">同商标名多类</a></dt>
+<dt class="ot1"><a href="{:U('Index/tmWrapSearch')}">商标包</a></dt>
+<dt class="ot1"><a href="{:U('Index/similarSearch')}">近似搜索</a></dt>
+<dt class="ot1"><a href="{:U('Index/graphSearch')}">图形搜索</a></dt>
+<dt class="ot1"><a href="{:U('Index/fzMold')}">25类适应风格类型搜索</a></dt>
+</dl>
+</div>
+<script type="text/javascript">
+$(function(){
+	$("#j_k_key dfn").click(function(){
+		var chk = $(this).find('input[type=checkbox]').attr('checked');
+		if(typeof(chk) == 'undefined'){
+			$(this).removeClass('s_tabox_dfn_hover');
+		}else{
+			$(this).addClass('s_tabox_dfn_hover');
+		}	
+	});
+
+});
+</script>
+<div class="contable" style="display:block;">
+<ul class="pad">
+<dl>
+<dt>关键字</dt>
+<dd class="m1" id="j_k_key">
+<if condition='$con.content1 neq ""'>
+<input type='hidden' value='{$con.content1}' name='content1' />
+</if>
+<input type="text" value="{$con.content|default='中文/英文/注册号/ID号'}" name='content' onfocus="if(this.value==this.attributes.attr_val.value)this.value='';" onblur="if(!this.value)this.value=this.attributes.attr_val.value;" attr_val="中文/英文/注册号/ID号" class="ipt2"/>
+<eq name="con.before" value='1'>
+<dfn class="s_tabox_dfn_hover"><label><input type="checkbox"  name='before' value="1" checked /> 前包含</label></dfn>
+	<else/>
+<dfn><label><input type="checkbox"  name='before' value="1" /> 前包含</label></dfn>
+</eq>
+<eq name="con.middle" value='1'>
+<dfn class="s_tabox_dfn_hover"><label><input type="checkbox" name='middle' value="1" checked /> 任意包含</label></dfn>
+	<else/>
+<dfn><label><input type="checkbox" name='middle' value="1" /> 任意包含</label></dfn>
+</eq>
+<eq name="con.end" value='1'>
+<dfn class="s_tabox_dfn_hover"><label><input type="checkbox" name='end' value="1" checked /> 结尾包含</label></dfn>
+	<else/>
+<dfn><label><input type="checkbox" name='end' value="1" /> 结尾包含</label></dfn>
+</eq>
+<eq name="con.like" value='1'>
+<dfn class="s_tabox_dfn_hover"><label><input type="checkbox" name='like' value="1" checked /> 包含近似商标</label></dfn>
+	<else/>
+<dfn><label><input type="checkbox" name='like' value="1" /> 包含近似商标</label></dfn>
+</eq>
+
+</dd>
+</dl>
+
+<dl>
+<dt>商标类型</dt>
+<dd class="m1">
+<div>
+<ul id="jDropDown">
+<li><a id='sbtype' href="#"></a>
+<div class="column_3">
+<div class="column">
+<ul>
+<li><label><input type="checkbox" name='chun_ch' key='1' value="1" <eq name="con.chun_ch" value='1'>checked</eq>/>纯中文</label></li>
+<li><label><input type="checkbox" name='chun_en' <eq name="con.chun_en" value='1'>checked</eq> key='1' value="1" />纯英文</label></li>
+<li><label><input type="checkbox" <eq name="con.chun_tx" value='1'>checked</eq> name='chun_tx' key='1' value="1" />纯图形</label></li>
+<li><label><input type="checkbox" <eq name="con.chun_num" value='1'>checked</eq> key='1' name='chun_num' value="1"/>纯数字</label></li>
+<li><label><input type="checkbox" key='2' name='chinese' <eq name="con.chinese" value='1'>checked</eq> value='1' />包含中文</label></li>
+<li><label><input type="checkbox" key='2'  name='english' <eq name="con.english" value='1'>checked</eq> value='1' />包含英文</label></li>
+<li><label><input type="checkbox" key='2' <eq name="con.tuxing" value='1'>checked</eq>  name='tuxing' value='1'/>包含图形</label></li>
+<li><label><input type="checkbox" key='2' <eq name="con.numbers" value='1'>checked</eq>  name='numbers' value='1' />包含数字</label></li>
+</ul>
+</div>
+</div>
+</li>
+<li><a id='ch_num' href="#" style='display:none;'></a>
+<div class="column_3">
+<div class="column">
+<ul>
+<php>
+                $hz_arr=array('1个汉字'=>'1,1','2个汉字'=>'2,2','3个汉字'=>'3,3','4个汉字'=>'4,999');
+                $con['ch_num']=explode(',', $con['ch_num']);
+                $con['ch_num'][1]=$con['ch_num'][0];
+                if($con['ch_num'][0]==4){
+                    $con['ch_num'][1]=999;
+                }
+                $con['ch_num']=join(',',$con['ch_num']);
+            </php>
+
+<volist name='hz_arr' id='vo'><php>$checked=($con['ch_num']==$vo)?'checked':'';</php>
+<li><label><input type="radio" name="ch_num" owkey='9' value="{$vo}" {$checked}/>{$key}</label></li>
+</volist>
+<li><label><input type="checkbox"  name="hzall" value='1' <eq name="con.hzall" value='1'>checked</eq>/>包含所选及以上</label></li>
+<li><label subkey='unlimi'  unkey='9' class="on">不限</label></li>
+</ul>
+</div>
+</div>
+</li>
+<li><a id='en_num' href="#" style='display:none;'></a>
+<div class="column_3">
+<div class="column">
+<ul>
+<php>
+                $zm_arr=array('1个字母'=>'1,1','2个字母'=>'2,2','3个字母'=>'3,3','4个字母'=>'4,4','5个字母'=>'5,5','6个字母'=>'6,6','7个字母'=>'7,7','8个字母'=>'8,999');
+                $con['en_num']=explode(',', $con['en_num']);
+                $con['en_num'][1]=$con['en_num'][0];
+                if($con['en_num'][0]==4){
+                    $con['en_num'][1]=999;
+                }
+                $con['en_num']=join(',',$con['en_num']);
+            </php>
+<volist name='zm_arr' id='vo'><php>$checked=($con['en_num']==$vo)?'checked':'';</php>
+<li><label><input type="radio" owkey='10' name="en_num" value="{$vo}" {$checked}/>{$key}</label></li>
+</volist> 
+<li><label><input type="checkbox"  name="zmall" value='1' <eq name="con.zmall" value='1'>checked</eq>/>包含所选及以上</label></li>
+<li><label subkey='unlimi'  unkey='10' class="on">不限</label></li>
+</ul>
+</div>
+</div>
+</li>
+<li><a id='regdate' href="#"></a>
+<div class="column_3">
+<div class="column">
+<ul>
+<php>
+                $zc_arr=array('已注册1年以下'=>'0,1','已注册1年以上'=>'1,999','已注册2年以上'=>'2,999','已注册3年以上'=>'3,999','已注册4年以上'=>'4,999','已注册5年以上'=>'5,999');
+            </php>
+<volist name='zc_arr' id='vo'><php>$checked=($con['regdate']==$vo)?'checked':'';</php>
+<li><label><input  type="radio" name="regdate" owkey='11' value="{$vo}" {$checked}/>{$key}</label></li>
+</volist>
+<li><label subkey='unlimi'  unkey='11' class="on">不限</label></li>
+</ul>
+</div>
+</div>
+</li>
+</ul>
+</div>
+</dd>
+</dl>
+
+<dl>
+<dt>查询内容</dt>
+<dd class="m3" id='chaxuntuxing' style='display:none;'>查询内容：
+<input type="text" name='25code' value="{$con.25code|default='请输入商标图形编码'}" onfocus="if(this.value==this.attributes.attr_val.value)this.value='';" onblur="if(!this.value)this.value=this.attributes.attr_val.value;" attr_val="请输入商标图形编码" class="ipt2"/>
+<a href="##" class="blue" onclick="showDiv('graphicPop')">选择图形编码</a>
+</dd>
+<dd class="m3">定义群组/服务：
+<span id='25sag'><i>暂无定义</i></span><a href="##" class="blue" onclick="showDiv('groupPop')">选择群组</a>
+</dd>
+</dl>
+<dl class="cloth" id="more50" style="display:none;">
+<dt>25类商标</dt>
+<dd class="m2"><span id='25lei_text'><i>暂无选择条件</i></span> <a href="##" class="blue" onclick="showDiv('fzPop')">重新选择搜索条件</a>
+</dd>
+</dl>
+<div class="clear"></div>
+</ul>
+<p class="btm"><input type="submit" name="Submit" value="提交&#13;&#10;搜索" class="btn"/><br/>
+<a href="{:U('Index/search')}">清空所有条件</a>
+</p>
+
+</div>
+</div>
+<!--商标搜索 end-->
+<if condition="$info eq ''" >
+<input type='hidden' name="discu" value="1" />
+</form>
+<elseif condition='$info eq 1' />
+<input type='hidden' name="discu" value="1" />
+</form>
+<div class='clear'></div>
+<center><h1 style="font-size:24px;margin:20px;">查无结果，如果你的各种搜索条件有矛盾，可能导致无结果，<br>
+本站包括所有市面上可以卖的商标，如不知道如何查询，请咨询我们的在线客服
+</h1></center>
+<else />
+<input type='hidden' name="discu" value="1" />
+</form>
+
+<div class="clear"></div>
+<div id="tmleftbox">
+<!--查询结果列表-->
+<php>
+    $con['price']=explode(',',$con['price']);
+</php>
+<div class="resultbox">
+<script type="text/javascript">
+    /*拖动滑块*/
+$(document).ready(function(){
+    $("#range_5").ionRangeSlider({
+        min: 0,
+        max: 50,
+        from:{$con.price.0|default=0},
+        to: {$con.price.1|default=50},
+        type: 'double',//设置类型
+        step: 1,
+        prefix: "",//设置数值前缀
+        postfix: "",//设置数值后缀
+        prettify: true,
+        hasGrid: true,
+        onChange: function(obj){        // function-callback, is called on every change
+        $('#price1').val($('.irs-from').text());
+        $('#price2').val($('.irs-to').text());
+        }
+    }); 
+     $(".slipbox").children(".slipmore").css("display","none");
+});
+
+/*拖动滑块 end*/
+</script>
+<!-- 
+<form method="get">
+<input type="hidden" name="class" value="{$class}"/>
+<div class="sortbox">排序：
+<button type="submit" name='zh' value='1'  class="ascbtn" />综合</button>
+<button type="submit" name='pf' value="<eq name='con.pf' value='2'>1<else/>2</eq>" class="<eq name='con.pf' value='2'>ascbtn<else/>desbtn</eq>" />评分</button>
+<button type="submit" name='sj' value="<eq name='con.sj' value='2'>1<else/>2</eq>" class="<eq name='con.sj' value='2'>ascbtn<else/>desbtn</eq>" />更新时间</button>
+<button type="submit" name='sl' value="<eq name='con.sl' value='2'>1<else/>2</eq>" class="<eq name='con.sl' value='2'>ascbtn<else/>desbtn</eq>" />浏览数量</button>
+<button type="submit" name='jg' value="<eq name='con.jg' value='2'>1<else/>2</eq>" class="<eq name='con.jg' value='2'>ascbtn<else/>desbtn</eq>" />价格</button>
+<span class="slipbox" data-kone="groom"><input type="text" name="pricea[]" id='price1' value="{$con.price.0}" class="ipt" /> - <input type="text" name="pricea[]"  value="{$con.price.1}" id='price2' class="ipt" /> 万元
+<div class="slipmore">
+<div class="ranSlider"><input type="text" id="range_5" /><p><input type="Submit" name="Submit" value="确定" class="btn1" /></p></div>
+<dl class="groom">
+<dt><a href="{$url}?price=0,3">特价商标</a></dt><dd>27.2%选择</dd>
+<dt><a href="{$url}?price=4,6">五万左右商标</a></dt><dd>35.3%选择</dd>
+<dt><a href="{$url}?price=8,12">十万左右商标</a></dt><dd>23.4%选择</dd>
+<dt><a href="{$url}?price=10,1000">十万以上商标</a></dt><dd>14.1%选择</dd>
+</dl>
+</div>
+</span>
+<em>
+<label><input type="checkbox" name="discu" value="1" <eq name="con.discu" value='1'>checked</eq> /> 包括面议</label>
+<label><input type="checkbox" name="outsale" value="1" <eq name="con.outsale" value='1'>checked</eq>/> 推荐特价</label>
+<label><input type="checkbox" name="recommend" value="1" <eq name="con.recommend" value='1'>checked</eq>/> 推荐</label>
+<input type="Submit" name="Submit" value="确定" class="btn" />
+</em>
+</div>
+</form>
+ -->
+<div class="home_hot" >
+    <div class="pub_title"><h2>商标展示  <span style='margin-left:10px;font-size:80%'>查询{$bread_nav}( 总数<strong style='color:red'>{$count|default=0}</strong>个 )</span></h2></div>
+<ul class="logo_img">
+<volist name='info' id='vo'>
+<li><span class="slipbox" data-kone="c"><a href="<php>$urlname='Index/tmdetail?id='.$vo["tm_id"];echo U($urlname);</php>" title="{$vo.tm_name}" target="_blank"><img src="<eq name='vo.is_fine' value='1'>{:C('PIC9')}/{$vo.tm_id}<else />{:C('PIC4')}/{$vo.tm_id}</eq>" /></a>
+<p><a href="<php>$urlname='Index/tmdetail?id='.$vo["tm_id"];echo U($urlname);</php>" title="{$vo.tm_name}" class="title" target="_blank">{$vo.tm_name}</a></p><div class="lop">
+<if condition="$Think.session.id gt 0">
+ID：{$vo.tm_id}
+	<if condition="$vo['tm_categories'] eq 25">
+	<php>
+		if($vo[tm_price] > 0){
+		echo '<em class="main_nav">价格：&yen;'.$vo[tm_price].'万</em>';
+		}else{
+		echo '<em class="main_nav">面议</em>';
+		}
+	</php>
+	</span></p>
+	<else />
+<php>
+$data=$vo['price_group']?$vo['price_group']:getprices($vo['tm_price']);
+$urlname='Index/quxiantu?data='.$data.'&date='.$date;
+		if($vo[tm_price] > 0){
+		echo '
+<em class="main_nav" onmouseover="showSubNav(this);" onmouseout="hideSubNav(this);">查看价格曲线
+<div class="sub_nav">
+<div class="a">
+<h4>价格曲线（单位：万元）</h4>
+<iframe src="'.U($urlname).'" scrolling="no" frameborder="0" width="100%" height="300" id="mainFrame" onload=\'IFrameReSize("mainFrame");IFrameReSizeWidth("mainFrame");\'></iframe>
+</div>
+</div>
+</em>';
+
+		}else{
+		echo '<em class="main_nav">面议</em>';
+		}
+	</php>
+	</p>
+	</if>
+<else />ID：{$vo.tm_id}
+<em href="###" class="main_nav" onclick="showDiv('loginPop')">登录查看价格</em>
+</if>
+</div>
+<p class="grey">所属类别：<a href="<php>$urlname='Index/tmclass?id='.$vo["tm_categories"];echo U($urlname);</php>" target="_blank" title="<php>echo $sblist[$vo['tm_categories']];</php>">第{$vo.tm_categories}类</a></p>
+<p class="grey" title="类似群组：{$vo.belong_group}">类似群组：{$vo.belong_group|subtext=18}</p>
+<p class="grey" title="{$vo.belong_groupdetail}">{$vo.belong_groupdetail|subtext=14}</p>
+<div class="slipmore imgmore">
+<em><a href="{:U('Index/tmlike',array('id'=>$vo['tm_id']))}" target="_blank" class="i1">查找近似商标</a><span style="display:none">{$vo.tm_id}</span><a href="###" class="i2">收藏</a></em>
+</div>
+</span>
+</li>
+</volist>
+</ul> 
+</div>
+
+</ul>
+</div>
+<!--查询结果列表 end-->
+
+<!--分页-->
+{$page}
+<!--分页 end-->
+</div>
+
+<include file="public/search_r" />
+</if>
+
+<div class="clear"></div>
+</div>
+<!--底部-->
+<div id="footer">
+<include file="public/flink" />
+<include file="public/footbox" />
+</div>
+<!--底部 end-->
+
+<script type="text/javascript" src="{:C('HTMLPATH')}js/jquery-layer.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/leftmenu.js"></script>
+
+<!--背景层-->
+<div id="bg" class="bg" style="display:none;"></div>
+<iframe id="popIframe" class="popIframe" frameborder="0" ></iframe>
+<!--背景层-->
+<script type="text/javascript">
+	$(function(){
+		$('.i2').click(function(){
+			var tm_id = $(this).prev().html();
+			$.post("{:U('User/collect_tm')}",{'tm_id':tm_id},function(msg){
+				alert(msg);
+				if(msg == '收藏成功！'){
+					$.post("{:U('User/createcolltm')}",{'id':tm_id},function(msg){
+						if(msg != '-1'){
+							var lileng= $('.mycollection ul li').length;
+							if(lileng == 0){
+								$('.mycollection ul').append(msg);
+							}else if(lileng == 6){
+								$('.mycollection ul li').eq(5).remove();
+								$('.mycollection ul li').eq(0).before(msg);
+							}else{
+								$('.mycollection ul li').eq(0).before(msg);
+							}
+							var count = Number($('.collecttmnum').html()) + 1;
+							$('.collecttmnum').html(count);
+						}
+					});
+				}
+			});
+		});
+	});
+</script>
+</body>
+</html>

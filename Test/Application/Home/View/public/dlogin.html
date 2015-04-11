@@ -1,0 +1,28 @@
+<div id="loginPop" class="ondiv" style="display:none;">
+<div class="content">
+<h2><span class="close"><input type="submit" id="" value="" class="closebtn" title="关闭" onclick="closeDiv('loginPop')" /></span>用户登录</h2>
+<ul class="linebox">
+<div class="leftbox">
+<ul>
+<h4>欢迎来到全国最大商标网站 -</h4>
+<h3>华唯商标转让网</h3>
+<li><input type="button" onclick='javascript:window.location.href="{:U("User/reg")}"' value="马上注册" class="btn" /></li>
+<h4>您也可以使用以下方式直接登录：</h4>
+<li><a href="#" title="QQ登录"><img src="{:C('HTMLPATH')}images/qqLogin.png" /></a> <a href="#" title="新浪微博登录"><img src="{:C('HTMLPATH')}images/sinaLogin.png" /></a></li>
+</ul>
+</div>
+<div class="rightbox">
+<ul>
+<h4>用户登录</h4>
+<form action='{:U("User/index")}' method='post' />
+<li>用户名：<input type="text" name="name" class="ipt" /></li>
+<li>密　码：<input type="password" name="password" class="ipt" /></li>
+<li><input type="submit" name="Submit" value="登录" class="btn" /></li>
+</form>
+<li><a href="{:U('User/getPwdWay')}" target="_blank">忘记密码？果断找回。</a></li>
+</ul>
+</div>
+<div class="clear"></div>
+</ul>
+</div>
+</div>

@@ -1,0 +1,98 @@
+<include file="public/m_header" />
+<div class="m_content">
+<div class="content_title"><h2>发布转让</h2><div class="net_add"><i></i>您现在的位置：个人中心 &gt; 商标管理 &gt; 发布转让</div></div>
+<div class="content_box">
+
+
+<script type='text/javascript' src="{:C('HTMLPATH')}js/jquery.bgiframe.min.js"></script>
+<link  href="{:C('HTMLPATH')}css/validate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+$(function(){
+    var xOffset = -20;
+    var yOffset = 20;
+
+    $("[reg],[tip]").hover(
+        function(e) {
+            if($(this).attr('tip') != undefined){
+                var top = (e.pageY + yOffset);
+                var left = (e.pageX + xOffset);
+                $('body').append( '<p id="vtip"><img id="vtipArrow" src="{:C('HTMLPATH')}images/vtip_arrow.png"/>' + $(this).attr('tip') + '</p>' );
+                $('body').append( '<p id="vtip">' + $(this).attr('tip') + '</p>' );
+                $('p#vtip').css("top", top+"px").css("left", left+"px");
+                $('p#vtip').bgiframe();
+            }
+        },
+        function() {
+            if($(this).attr('tip') != undefined){
+                $("p#vtip").remove();
+            }
+        }
+    ).blur(function(){
+        if($(this).attr("reg") != undefined){
+            validate($(this));
+        }
+    });
+
+    // 提交前验证
+    $("form").submit(function(){
+        var isSubmit = true;
+        $(this).find("[reg]").each(function(){
+            if(!validate($(this))){
+                isSubmit = false;
+            }
+        });
+        return isSubmit;
+    });
+});
+// 验证函数
+function validate(obj){
+    var reg = new RegExp(obj.attr("reg"));
+    var objValue = obj.attr("value");
+    if(!reg.test(objValue)){
+        obj.addClass("input_validation-failed");
+        return false;
+    }else{
+        obj.removeClass("input_validation-failed");
+        return true;
+    }
+}
+</script>
+
+<div class="transfer">
+                	<div class="note"><b>注意一：</b>必填项必填，否则对应商标转让无法发布；<br/><b>注意二：</b>如果不记得注册号，可以点击这个链接查询你自已的商标<a href="http://cx.ipsoon.cn">http://cx.ipsoon.cn</a>；</div>
+<form action="" method="post">
+                    	<div class="aaa">
+                            <p><em><i style="color:#F00">*</i> 类&nbsp;&nbsp;&nbsp;&nbsp;别</em>
+                            <select class="n_select" name="cate_id[]">
+<foreach name="sblist" item="vo">
+<option value="{$key}">第{$key}类-{$vo}</option>
+</foreach>
+                            </select></p>
+                            <p><em><i style="color:#F00">*</i> 名&nbsp;&nbsp;&nbsp;&nbsp;称</em><input type="text" class="buy_input" name="tm_name[]" reg="[^\s]+" tip="名称不能为空">例：洛朗骑士</p>
+                            <p><em><i style="color:#F00">*</i>&nbsp;&nbsp;注册号</em><input type="text" class="buy_input" name="regnum[]" reg="^\s*\d+\s*$" tip="注册号不能为空">例：1589898</p>
+                            <p><em><i style="color:#F00">*</i>&nbsp;&nbsp;申请人</em><input type="text" class="buy_input" name="applicant[]" reg="[^\s]+" tip="申请人不能为空">例：xx有限公司</p>
+                            <p><em><i style="color:#F00">*</i> 价&nbsp;&nbsp;&nbsp;&nbsp;格</em><input type="text" class="buy_input" name="price[]"  reg="[^\s]+" tip="价格不能为空">具体数字，例：2万 或者 面议</p>
+                            <p><em>备&nbsp;&nbsp;&nbsp;&nbsp;注</em><textarea name="note[]"></textarea></p>
+                        </div>
+                    
+                    <div class="bbb" style='height:80px;'>
+                    	<p><input type="submit" value="提交" class="transfer_but transfer_butd"><input type="button" value="增加一条" class="transfer_but" id="increase"></p>
+                    </div>
+					</form>
+                    <script>
+                    	$(document).ready(function(){
+							var txt1 = $(".aaa").html(); 
+							txt1 ='<div class="aaa">'+txt1+'</div>';
+							$("#increase").click(function(){
+								$(".bbb").before(txt1)
+								});
+							});
+                    </script>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<include file="public/service_header"/>
+<div class="s_main">
+<include file="public/service_nav"/>
+<div class="s_rightbox">
+<div class="crumbs">您所在的位置：<a href="{:U('Index/index')}">首页</a> &gt; <a href="{:U('Article/index',array('id'=>1,'tid'=>1))}">关于华唯</a> &gt; <a href="{:U('Article/transfer',array('id'=>$cate['term_id'],'tid'=>$tid))}">{$cate.name}</a> &gt; 第{$art.cate_id}类 {$art.tm_name} 注册号:{$art.regnum} 申请人:{$art.applicant} 价格:{$art.price}</div>
+<ul>
+<div class="detbox">
+<h3>第{$art.cate_id}类 {$art.tm_name} 注册号:{$art.regnum} 申请人:{$art.applicant} 价格:{$art.price}
+<p>
+<em class="jiathis_style">
+<!-- JiaThis Button BEGIN -->
+<a class="jiathis_button_qzone"></a>
+<a class="jiathis_button_tsina"></a>
+<a class="jiathis_button_tqq"></a>
+<a class="jiathis_button_weixin"></a>
+<a class="jiathis_button_renren"></a>
+<a class="jiathis_button_xiaoyou"></a>
+<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+<a class="jiathis_counter_style"></a>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+</em>
+<em>来源：hw-tm.cn</em><em>时间：{$art.uptime|date="Y-m-d",###}</em>
+</h3>
+<ul>
+<p>类别：第{$art.cate_id}类</p>
+<p>名称：{$art.tm_name}</p>
+<p>注册号：{$art.regnum}</p>
+<p>申请人：{$art.applicant}</p>
+<p>价格：{$art.price}</p>
+<p>备注：{$art.note}</p>
+</ul>
+</div>
+<p>上一篇：<empty name="down">已是第一条<else/><a href="{:U('Article/transferinfo',array('id'=>$cate['term_id'],'aid'=>$down['id']))}" class="blue"><if condition="!empty($down)">第{$down.cate_id}类 {$down.tm_name} 注册号:{$down.regnum} 申请人:{$down.applicant} 价格:{$down.price}</if></a></empty></p>
+<p>下一篇：<empty name="up">已是最后一条<else/><a href="{:U('Article/transferinfo',array('id'=>$cate['term_id'],'aid'=>$up['id']))}" class="blue"><if condition="!empty($up)">第{$up.cate_id}类 {$up.tm_name} 注册号:{$up.regnum} 申请人:{$up.applicant} 价格:{$up.price}</if></a></empty></p>
+</ul>
+</div>
+<div class="clear"></div>
+</div>
+
+<!--底部-->
+<div id="footer">
+<include file="public/footbox" />
+</div>
+<!--底部 end-->
+
+</body>
+</html>

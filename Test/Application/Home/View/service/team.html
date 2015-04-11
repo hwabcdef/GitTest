@@ -1,0 +1,64 @@
+<include file="public/service_header"/>
+<div class="s_main">
+<include file="public/service_nav"/>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/common.js"></script>
+<div class="s_rightbox">
+<div class="crumbs">您所在的位置：<a href="{:U('Index/index')}">首页</a> &gt; <a href="{:U('Article/index',array('id'=>1,'tid'=>1))}">关于华唯</a> &gt; {$cate.name}</div>
+<ul>
+<div class="subnav">
+<a href="{:U('Article/index',array('id'=>1,'tid'=>1))}">关于华唯</a>
+<a href="{:U('Article/news',array('id'=>32,'tid'=>1))}">公司历程</a>
+<a href="{:U('Article/index',array('id'=>20,'tid'=>1))}">华唯文化</a>
+<a href="{:U('Article/index',array('id'=>4,'tid'=>1))}">办公环境</a>
+<a href="{:U('Article/team',array('id'=>5,'tid'=>1))}"class="on">团队风采</a>
+<a href="{:U('Article/news',array('id'=>14,'tid'=>1))}">华唯动态</a>
+<div class="clear"></div>
+</div>
+<h2>团队风采</h2>
+<div class="phogobox">
+        <volist name="lists" id="vo">
+        <php>
+            $smeta=json_decode($vo['smeta'], true);
+        </php>
+
+<dl><dt><a href="javascript:;" onclick="showDiv('showPhoto{$key}')"><img src="/hwtm/data/upload/{:sp_get_asset_upload_path($smeta['thumb'])}" onload="AutoResizeImage(210,141,this)"/></a></dt><dd><a href="javascript:;" onclick="showDiv('showPhoto')">{$vo.post_title}</a></dd></dl>
+       </volist>
+</div>
+
+<!--分页-->
+{$link}
+<!--分页 end-->
+</ul>
+</div>
+<div class="clear"></div>
+</div>
+
+<!--底部-->
+<div id="footer">
+<include file="public/footbox" />
+</div>
+<!--底部 end-->
+
+<!--大图-->
+<volist name="lists" id="vo">
+<php>
+$smeta=json_decode($vo['smeta'], true);
+</php>
+<div id="showPhoto{$key}" class="ondiv" style="display:none;">
+<div class="content">
+<h2><span class="close"><input type="submit" id="" value="" class="closebtn" title="关闭" onclick="closeDiv('showPhoto{$key}')" /></span>{$vo.post_title}</h2>
+<ul class="pd">
+<img src="/hwtm/data/upload/{:sp_get_asset_upload_path($smeta['thumb'])}" onload="AutoResizeImage(680,500,this)" />
+</ul>
+</div>
+</div>
+</volist>
+<!--大图 end-->
+
+<!--背景层-->
+<div id="bg" class="bg" style="display:none;"></div>
+<iframe id="popIframe" class="popIframe" frameborder="0" ></iframe>
+<!--背景层-->
+
+</body>
+</html>

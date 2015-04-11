@@ -1,0 +1,42 @@
+<include file="public/service_header"/>
+<div class="s_main">
+<include file="public/service_nav"/>
+<div class="s_rightbox">
+<div class="crumbs">您所在的位置：<a href="{:U('Index/index')}">首页</a> &gt; <a href="{:U('Article/index',array('id'=>1,'tid'=>1))}">关于华唯</a> &gt; {$cate.name}</div>
+<ul>
+<div class="subnav">
+<a href="{:U('Article/news',array('id'=>7,'tid'=>6))}">商标新闻</a>
+<a href="{:U('Article/news',array('id'=>8,'tid'=>6))}">商标问答</a>
+<a href="{:U('Article/news',array('id'=>9,'tid'=>6))}">商标法律</a>
+<a href="{:U('Article/news',array('id'=>10,'tid'=>6))}">商标知识</a>
+<a href="{:U('Article/news',array('id'=>11,'tid'=>6))}">知识产权新闻</a>
+<a href="{:U('Article/transfer',array('id'=>12,'tid'=>6))}" class="on">品牌转让</a>
+<a href="{:U('Article/news',array('id'=>13,'tid'=>6))}">企业管理</a>
+<a href="{:U('Article/news',array('id'=>15,'tid'=>6))}">行业动态</a>
+<div class="clear"></div>
+</div>
+<h2>{$cate.name}</h2>
+<div class="infobox">
+<ul>
+				<volist name="lists" id="vo">
+<li><a href="{:U('Article/transferinfo',array('id'=>$cate['term_id'],'aid'=>$vo['id'],'tid'=>6))}">第{$vo.cate_id}类 {$vo.tm_name} 注册号:{$vo.regnum} 申请人:{$vo.applicant} 价格:{$vo.price}</a><em>{$vo.uptime|date="Y-m-d",###}</em></li>
+				</volist>
+</ul>
+</div>
+
+<!--分页-->
+{$link}
+<!--分页 end-->
+</ul>
+</div>
+<div class="clear"></div>
+</div>
+
+<!--底部-->
+<div id="footer">
+<include file="public/footbox" />
+</div>
+<!--底部 end-->
+
+</body>
+</html>

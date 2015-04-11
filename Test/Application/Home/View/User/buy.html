@@ -1,0 +1,84 @@
+<include file="public/m_header" />
+<div class="m_content">
+<div class="content_title"><h2>发布求购</h2><div class="net_add"><i></i>您现在的位置：个人中心 &gt; 商标管理 &gt; 发布求购</div></div>
+<div class="content_box">
+<div class="transfer">
+
+<script type='text/javascript' src="{:C('HTMLPATH')}js/jquery.bgiframe.min.js"></script>
+<link  href="{:C('HTMLPATH')}css/validate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+$(function(){
+	var xOffset = -20;
+	var yOffset = 20;
+
+	$("[reg],[tip]").hover(
+		function(e) {
+			if($(this).attr('tip') != undefined){
+				var top = (e.pageY + yOffset);
+				var left = (e.pageX + xOffset);
+				$('body').append( '<p id="vtip"><img id="vtipArrow" src="{:C('HTMLPATH')}images/vtip_arrow.png"/>' + $(this).attr('tip') + '</p>' );
+				$('body').append( '<p id="vtip">' + $(this).attr('tip') + '</p>' );
+				$('p#vtip').css("top", top+"px").css("left", left+"px");
+				$('p#vtip').bgiframe();
+			}
+		},
+		function() {
+			if($(this).attr('tip') != undefined){
+				$("p#vtip").remove();
+			}
+		}
+	).blur(function(){
+		if($(this).attr("reg") != undefined){
+			validate($(this));
+		}
+	});
+
+	// 提交前验证
+	$("form").submit(function(){
+		var isSubmit = true;
+		$(this).find("[reg]").each(function(){
+			if(!validate($(this))){
+				isSubmit = false;
+			}
+		});
+		return isSubmit;
+	});
+});
+// 验证函数
+function validate(obj){
+	var reg = new RegExp(obj.attr("reg"));
+	var objValue = obj.attr("value");
+	if(!reg.test(objValue)){
+		obj.css({border:"2px solid #ff0000",color:"red"});
+		return false;
+	}else{
+		obj.css({border:"1px solid #e3e9ef",color:""});
+		return true;
+	}
+}
+</script>
+
+<form action="" method="post">
+                	<p><em>信息标题</em><input type="text" class="buy_input" name="title" reg="[^\s]+" tip="信息标题不能为空"></p>
+                	<span>
+<b>例：</b><br>
+<i>买25类，女装商标</i><br>
+要求：中英文结合，比较洋气的，三个字以内<br>
+价格要求：2-5万左右；<br>
+<i>联系电话：13800000000</i><br>
+QQ:123456  E-MAIL:1234567@QQ.COM  其它联系方式：020-38800000
+
+                    </span>
+                    <em>求购商标详情</em>
+                    <textarea name="content" reg="[^\s]+" tip="求购商标详情不能为空"></textarea>
+                    <br>
+                    <input type="submit" value="提交" class="transfer_but transfer_butb">
+</form>
+</div>
+</div>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+</body>
+</html>

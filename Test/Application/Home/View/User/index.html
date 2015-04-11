@@ -1,0 +1,131 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$tmpl_info.title}</title>
+<meta name="Keywords" content="{$tmpl_info.keywords}" />
+<meta name="Description" content="{$tmpl_info.description}" />
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/memberStyle.css">
+<link rel="shortcut icon" href="{:C('HTMLPATH')}favicon.ico" type="image/x-icon" />
+<script type="text/javascript">
+var trace_page_on = "{$trace_page_arr.on}";
+if(trace_page_on){
+function trace_close_time(){
+    $.ajax({
+        type:"POST",
+        url:"{:U('Index/traceUrl')}",
+        async: false,
+        data:"id={$trace_page_arr.trace_id}",
+        success: function(result){
+            }
+    });
+}
+function trace_update_time(){
+    $.ajax({
+        type:"POST",
+        url:"{:U('Index/traceUrl')}",
+        async: false,
+        data:"type=1&id={$trace_page_arr.trace_id}",
+        success: function(result){
+            }
+    });
+}
+window.onbeforeunload = function(){
+    trace_close_time();
+}
+var time_limit_tmp = "{$trace_page_arr.limit_time|default=10000}";
+time_limit_tmp = parseInt(time_limit_tmp);
+time_limit_tmp = time_limit_tmp * 1000;
+setInterval(trace_update_time, time_limit_tmp);
+}
+</script>
+</head>
+
+<body class="mbody">
+<div id="loginbox">
+<div class="m_head">
+<div class="logo">
+<h1><a href="{:C('INDEXPATH')}" target="_blank" title="华唯商标转让网">华唯商标转让网</a></h1>
+</div>
+<div class="phone">
+<p class="grey">24小时服务热线</p>
+<p>400-888-1139</p>
+</div>
+</div>
+<div class="m_main">
+<div class="adbox"><img src="{:C('HTMLPATH')}images/logbg.jpg" /></div>
+
+<script type='text/javascript' src="{:C('HTMLPATH')}js/jquery.bgiframe.min.js"></script>
+<link  href="{:C('HTMLPATH')}css/validate.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript">
+$(function(){
+    var xOffset = -20;
+    var yOffset = 20;
+
+    $("[reg],[tip]").hover(
+        function(e) {
+            if($(this).attr('tip') != undefined){
+                var top = (e.pageY + yOffset);
+                var left = (e.pageX + xOffset);
+                $('body').append( '<p id="vtip"><img id="vtipArrow" src="{:C('HTMLPATH')}images/vtip_arrow.png"/>' + $(this).attr('tip') + '</p>' );
+                $('body').append( '<p id="vtip">' + $(this).attr('tip') + '</p>' );
+                $('p#vtip').css("top", top+"px").css("left", left+"px");
+                $('p#vtip').bgiframe();
+            }
+        },
+        function() {
+            if($(this).attr('tip') != undefined){
+                $("p#vtip").remove();
+            }
+        }
+    ).blur(function(){
+        if($(this).attr("reg") != undefined){
+            validate($(this));
+        }
+    });
+
+    // 提交前验证
+    $("form").submit(function(){
+        var isSubmit = true;
+        $(this).find("[reg]").each(function(){
+            if(!validate($(this))){
+                isSubmit = false;
+                // return false;   // 跳出循环
+            }
+        });
+        return isSubmit;
+    });
+});
+// 验证函数
+function validate(obj){
+    var reg = new RegExp(obj.attr("reg"));
+    var objValue = obj.attr("value");
+    if(!reg.test(objValue)){
+        obj.addClass("input_validation-failed");
+        return false;
+    }else{
+        obj.removeClass("input_validation-failed");
+        return true;
+    }
+}
+</script>
+
+
+<div class="logbox">
+<ul>
+<form action="{:U('User/index')}" method="post">
+<h2>用户登录</h2>
+<dl><dt>用户名：</dt><dd><input type="text" name="name" class="ipt" reg="^\s*([\u4e00-\u9fa5]|\w)+\s*$" tip="用户名为中文或英文字母"/></dd></dl>
+<dl><dt>密　码：</dt><dd><input type="password" name="password" class="ipt" reg="^\s*\w{6,}\s*$" tip="密码为6位以上字母或数字"/></dd></dl>
+<dl class="reg"><dt></dt><dd><a href="{:U('User/reg')}">立即注册</a><a href="{:U('User/getPwdWay')}">忘记密码？</a></dd></dl>
+<dl><dt></dt><dd><input type="submit" name="Submit" value="登录" class="btn" /></dd></dl>
+<p>使用其它帐号登录：<em class="log1"><a href="#" title="QQ登录">QQ登录</a></em><em class="log2"><a href="#" title="新浪微博登录">新浪微博登录</a></em></p>
+</form>
+</ul>
+</div>
+</div>
+<include file='public/user_footer' />
+</div>
+</body>
+</html>

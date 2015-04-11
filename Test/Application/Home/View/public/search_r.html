@@ -1,0 +1,56 @@
+
+<div id="tmrightbox" >
+<!--联系电话-->
+<div class="tmContact">
+<include file='public/lianxi' />
+</div>
+<!--联系电话 end-->
+<!--推荐商标-->
+<div class="recombox">
+<h2>推荐商标</h2>
+<ul>
+<volist name='tuijianneiye' id='vo'>
+	<li><a href="{:U('Index/tmdetail',array('id'=>$vo['tm_id']))}" target="_blank" title="{$vo.tm_name}"><img src="<eq name='vo.is_fine' value='1'>{:C('PIC9')}/{$vo.tm_id}<else />{:C('PIC4')}/{$vo.tm_id}</eq>" alt="{$vo.tm_name}" /></a><p><a href="{:U('Index/tmdetail',array('id'=>$vo['tm_id']))}" target="_blank">{$vo.tm_name}</a></p></li>
+</volist>
+</ul>
+</div>
+<!--推荐商标 end-->
+<!--收藏夹-->
+<div class="mycollection">
+<h2>未处理收藏夹<neq name="Think.session.uid" value=""><span>(<span class="collecttmnum">{$coll_num|default="0"}</span> )</span><a href="{:U('User/collection')}" target="_blank">查看更多</a><else/><a href="###" onclick="showDiv('loginPop')">登录查看收藏夹</a></neq></h2>
+<ul>
+<if condition="Think.session.uid neq '' ">
+<volist name="colltminfo" id="vo" >
+<li>
+<a href="{:U('Index/tmdetail',array('id'=>$vo['tm_id']))}" target="_blank" title=""><img src="{$vo.img}" alt="" />
+<div>
+<em>商标名称：</em>{$vo.tm_name}<br />
+<em>商标ID：</em>{$vo.tm_id}<br />
+<em>商标类别：</em>第{$vo.tm_categories}类<br />
+<em>商品或服务：</em>{$vo.belong_groupdetail}</div>
+</a>
+<span></span></li>
+</volist>
+<else/>
+<a href="{:U('User/index')}">请先注册/登陆查看收藏信息</a>
+</if>
+</ul>
+<script>
+$(".mycollection ul li span").click(function(){
+$(this).parent().children("a").hide();
+$(this).hide();
+});
+</script>
+</div>
+<!--收藏夹 end-->
+<!--浏览记录-->
+<div class="recombox hm_history">
+<h2>最近浏览的商标<a href="{:U('Index/myhistory')}">查看更多</a></h2>
+<ul>
+<volist name='history' id='vo'>
+<li><a href="{:U('Index/tmdetail',array('id'=>$vo['tm_id']))}" target="_blank" title="{$vo.tm_name}"><img src="http://7vzoco.com2.z0.glb.qiniucdn.com/{$vo.tm_id}" alt="{$vo.tm_name}" /></a></li>
+</volist>
+</ul>
+</div>
+<!--浏览记录 end-->
+</div>

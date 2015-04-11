@@ -1,0 +1,136 @@
+<include file="public/m_header" />
+<!--管理收藏夹-->
+<div id="popBox" class="ondiv" style="display:none;">
+<div class="content">
+<h2><span class="close"><input type="submit" id="" value="" class="closebtn" title="关闭" onclick="closeDiv('popBox')" /></span>新建收藏夹</h2>
+<ul>
+<form method="post" action="{:U('User/addcollfile')}">
+<dl>
+<dt>收藏夹名称：</dt><dd><input type="text" name="newfile" /></dd>
+<dt>收藏夹描述：</dt><dd><textarea name="describe"></textarea></dd>
+<div class="clear"></div>
+<p><input type="submit" name="Submit" value="确定" onclick="location.href='colleList.html'" /> <input type="button" name="calcel" value="取消" onclick="closeDiv('popBox')" /></p>
+</dl>
+</form>
+<div class="clear"></div>
+</ul>
+</div>
+</div>
+<!--管理收藏夹 end-->
+<div class="m_content">
+<ul class="pad">
+<div class="content_title"><h2>{$file.filename}</h2><div class="net_add"><i></i>您现在的位置：个人中心 &gt; 商标管理 &gt; 我的收藏 &gt;{$file.filename}</div></div>
+<div class="masthead">
+<label><input type="checkbox" id="selall" value="selall" onclick="select_all()" />全选</label>
+<label><input type="submit" name="Submit" value="批量删除" class="ipt1" onclick="deleteAll()"/></label>
+<label><input type="submit" name="Submit" value="批量导出" class="ipt2" onclick="outputAll()"/></label>
+<em>移动到
+	<select name="newfile" id="movelot" onchange="movelot()">
+	<option value="0">请选择收藏夹</option>
+    <volist name="collectfiles" id="v">
+    <if condition="$v['id'] neq $file['id']">
+    <option value="{$v.id}">{$v.filename}</option>
+    </if>
+    </volist>
+    </select>
+</em>
+<a href="##" class="a3" onclick="showDiv('popBox')">新建收藏夹</a>
+<a href="{:U('User/collection')}" class="a4">管理收藏夹</a>
+
+</div>
+<div class="clear"></div>
+<div class="content_box">
+<if condition="$tmlist neq null">
+<div class="collecbox">
+<ul>
+<form name="selectall" method="get">
+<volist name="tmlist" id="vo">
+<dl>
+<b><input type="checkbox" name="tmid[]" value="{$vo.tm_id}" /></b>
+<span class="slipbox" data-kone="mempopbox">
+<li><a href="#" target="_blank" title="{$vo.tm_name}"><img src="{$vo.img}" alt="{$vo.tm_name}" /></a>
+<h5><a href="#" target="_blank" title="{$vo.tm_name}">{$vo.tm_name}</a></h5>
+</li>
+
+<div class="slipmore popmore">
+<p>
+
+	<input type="hidden" name="fileid" value="{$file.id}"/>
+    <input type="hidden" name="tm_id" value="{$vo.tm_id}"/>
+	<select name="newfile" id="movetm" onchange="movetm2file()">
+	<option value="0">移动商标</option>
+    <volist name="collectfiles" id="v">
+    <if condition="$v['id'] neq $file['id']">
+    <option value="{$v.id}">{$v.filename}</option>
+    </if>
+    </volist>
+    </select>
+
+</p>
+<p><a href="{:U('User/outputdata',array('tm_ids'=>$vo['tm_id']))}" class="c1">导出</a> <a href="{:U('User/delcoltm',array('tmid'=>$vo['tm_id'],'fileid'=>$file['id']))}" class="c2">删除</a></p>
+</div>
+</span>
+</dl>
+</volist>
+</form>
+<div class="clear"></div>
+</ul>
+</div>
+<!--分页-->
+{$page}
+<!--分页 end-->
+<else/>
+<div class="voice"><img src="{:C('HTMLPATH')}images/error.png" />当前暂无商标收藏</div>
+</if>
+</div>
+<div class="clear"></div>
+</ul>
+</div>
+<div class="clear"></div>
+</div>
+</div>
+<script type="text/javascript">
+/*移动商标*/
+function movetm2file(){
+	var tm_id = $('#movetm').prev().val();
+	var oldfileid = $('#movetm').prev().prev().val();
+	var newfile = $('#movetm').val();
+	var data={'tm_id':tm_id,'oldfileid':oldfileid,'newfile':newfile};
+	$.post("{:U('User/movetm')}",data,function(msg){
+		if(msg == 1){
+			location.reload();
+		}else{
+			alert('移动失败！');
+		}
+	});
+}
+function select_all(){
+	$('.collecbox ul input[name="tmid[]"]').attr('checked','checked');
+}
+/*批量删除商标*/
+function deleteAll(){
+	var url='__URL__/delcoltm';
+	document.forms[name='selectall'].action=url;
+	document.forms[name='selectall'].submit();
+}
+/*批量导出商标*/
+function outputAll(){
+	var url='__URL__/outputLot';
+	document.forms[name='selectall'].action=url;
+	document.forms[name='selectall'].submit();
+}
+/*批量移动商标*/
+function movelot(){
+	var url='__URL__/movelottm';
+	$('.collecbox ul #movetm').val($('#movelot').val());
+	document.forms[name='selectall'].action=url;
+	document.forms[name='selectall'].submit();
+}
+</script>
+<script src="{:C('HTMLPATH')}js/jquery-layer.js" type="text/javascript"></script>
+<!--背景层-->
+<div id="bg" class="bg" style="display:none;"></div>
+<iframe id="popIframe" class="popIframe" frameborder="0" ></iframe>
+<!--背景层-->
+</body>
+</html>

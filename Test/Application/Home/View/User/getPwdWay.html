@@ -1,0 +1,223 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$tmpl_info.title}</title>
+<meta name="Keywords" content="{$tmpl_info.keywords}" />
+<meta name="Description" content="{$tmpl_info.description}" />
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/main.css">
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/memberStyle.css">
+<script type="text/javascript" src="{:C('HTMLPATH')}js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/common.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/ion.rangeSlider.js"></script>
+<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<script type="text/javascript">
+var trace_page_on = "{$trace_page_arr.on}";
+if(trace_page_on){
+function trace_close_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+function trace_update_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"type=1&id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+window.onbeforeunload = function(){
+	trace_close_time();
+}
+var time_limit_tmp = "{$trace_page_arr.limit_time|default=10000}";
+time_limit_tmp = parseInt(time_limit_tmp);
+time_limit_tmp = time_limit_tmp * 1000;
+setInterval(trace_update_time, time_limit_tmp);
+}
+</script>
+</head>
+
+<body class="mbody">
+
+<!-- 弹出框 -->
+<div id="getMobile" class="ondiv" style="display:none;">
+<div class="content">
+<h2><span class="close"><input type="submit" id="" value="" class="closebtn" title="关闭" onclick="closeDiv('getMobile')" /></span>手机重置登录密码</h2>
+
+
+<div class="w_gpbox" id="verify_d">
+<ul>
+<li>您绑定的手机<b>“{$pwd_uinfo.cellphone}”</b>。</li>
+<li>
+	<div id="J_verify_code">
+	<img class="yanzheng_img" id="code_img" alt="" src="{:U('User/getVerify')}"
+	onclick="document.getElementById('code_img').src='__URL__/getVerify/a/'+Math.random();" 
+	style="cursor: pointer;" title="点击获取"/>
+	</div>
+
+</li>						
+<li>请输入验证码：<input name="t_code" type="text" value="" class="ipt" />
+<input type="button" value="确定" class="btn1" id="verify_b" /></li>
+</ul>
+</div>
+
+<div class="w_gpbox" id="sendcell_d" style="display:none;">
+<ul>
+<li>您绑定的手机<b>“{$pwd_uinfo.cellphone}”</b>。</li>
+<li>确定发送手机验证短信
+<input type="button" value="确定" class="btn1" id="sendcell_b"/></li>
+</ul>
+</div>
+
+<form id="form2" name="form2" method="post" action="{:U('User/getPwdWay')}" style="display:none;">
+<div class="w_gpbox">
+<ul>
+<li>华唯商标转让网已经向您的绑定手机<b>“{$pwd_uinfo.cellphone}”</b>发送了一条短信。请查看并输入手机校验码。</li>
+<li>您收到的校验码：<input name="code" type="text" value="" class="ipt" /><input type="hidden" name="step" value="4"/>
+<input type="submit" value="确定" class="btn1" /></li>
+<li class="s_send"><input type="hidden" id="time_hidden" />
+您如果没有收到短信
+<input type="button" id="resend_d" name="phone" value="重新发送校验码" class="btn2" disabled="disabled"/>(<b id="time_input"></b>)</li>
+<li>如需帮助，请致电华唯商标转让网客服：400-888-1139，我们竭诚为您提供优质服务。</li>
+</ul>
+</div>
+</form>
+
+
+</div>
+</div>
+<!-- 弹出框 end -->
+
+<div id="loginbox">
+<div class="m_head">
+<div class="logo">
+<h1><a href="http://www.hw-tm.cn" target="_blank" title="华唯商标转让网">华唯商标转让网</a></h1>
+</div>
+<div class="phone">
+<p class="grey">24小时服务热线</p>
+<p>400-888-1139</p>
+</div>
+</div>
+
+<div class="m_main">
+<div id="container"></div>
+
+
+<div class="gpw" id="pwdway_d">
+<h2>找回密码<em>用户：{$pwd_uinfo.username}</em></h2>
+<ul>
+<li>
+<i class="mobile"></i>
+<a href="javascript:void(0);" onclick="showDiv('getMobile')" id="">手机找回</a>
+<p>通过注册会员时填写的手机号码，以手机短信方式找回密码。</p>
+</li>
+<li>
+<i class="mail"></i>
+<a href="{:U('User/resetPwdMail')}">邮箱找回</a>
+<p>通过注册时填写的邮箱，以发送邮件的方式找回密码。</p>
+</li>
+<li>
+<i class="phone"></i>
+<dfn>电话找回</dfn>
+<p>拨打400-888-1139，联系客服人员找回密码。</p>
+</li>
+<div class="clear"></div>
+</ul>
+</div>
+
+<script type="text/javascript">
+$(function(){
+	$("#verify_b").click(function(){
+		var code = $("#verify_d input[name=t_code]").attr('value');
+		if(typeof(code) == 'undefined'){
+			alert('请输入验证码！');
+			return false;
+		}
+		code = code.replace(/(^\s*)|(\s*$)/g, '');
+		if(code == ''){
+			alert('请输入验证码！');
+			return false;
+		}
+		//$(this).attr('disabled', true);
+		$.post("{:U('User/getPwdWay')}",{
+				step:6,
+				t_code:code
+			},function(data){
+				if(data.status == 1){
+					$("#sendcell_d").show();
+					$("#verify_d").hide();
+				}else{
+					alert(data.msg);
+					//$(this).attr('disabled', false);
+				}
+		}, "json");
+	});
+	//
+	$("#sendcell_b").click(function(){
+		$.post("{:U('User/getPwdWay')}",{
+				step:3
+			},function(data){
+				if(data.status == 1){
+					$("#form2").show();
+					$("#sendcell_d").hide();
+					$("#time_input").html('60');
+					$("#time_hidden").val(data.time);
+					setTimeout('settimeshow()',1000);
+				}else{
+					alert(data.msg);
+				}
+		}, "json");
+	});
+	//
+	$("#resend_d").click(function(){
+		$.post("{:U('User/getPwdWay')}",{
+				step:3
+			},function(data){
+				if(data.status == 1){
+					alert('重新发送成功!');
+				}else{
+					alert(data.msg);
+				}
+		}, "json");
+	});
+});
+function settimeshow(){
+	var time_old =$("#time_hidden").attr("value");
+	// 当前时间
+	time_old = parseInt(time_old);
+	var timestamp = Date.parse(new Date());
+	timestamp = timestamp / 1000;
+	timestamp = parseInt(timestamp);
+	var diff = timestamp - time_old;
+	if(diff <= 60){
+		diff = 60 - diff;
+		$("#time_input").html(diff);
+		setTimeout('settimeshow()',1000);
+	}else{
+		$("#resend_d").attr("disabled", false);
+	}
+}
+//
+</script>
+
+</div>
+<div class="clear"></div>
+<include file='public/user_footer' />
+</div>
+
+<!--背景层-->
+<div id="bg" class="bg" style="display:none;"></div>
+<iframe id="popIframe" class="popIframe" frameborder="0" ></iframe>
+<!--背景层-->
+
+</body>
+</html>

@@ -1,0 +1,48 @@
+<include file="public/service_header"/>
+<div class="s_main">
+<include file="public/service_nav"/>
+<div class="s_rightbox">
+<div class="crumbs">您所在的位置：<a href="{:U('Index/index')}">首页</a> &gt; <a href="{:U('Article/index',array('id'=>1,'tid'=>1))}">关于华唯</a> &gt; 成功案例</div>
+<ul>
+<h2>淘宝案例</h2>
+<div class="phogobox">
+<foreach name="tb" item="vo">
+      <php>
+          $smeta=json_decode($vo['smeta'], true);
+      </php>
+<dl><dt><img src="/hwtm/data/upload/{:sp_get_asset_upload_path($smeta['thumb'])}" style='width:210px;height:141px'/></dt><dd>{$vo.post_title}</dd></dl>
+</foreach>
+</div>
+<p><div class="clear"></div></p>
+
+<h2>成功案例</h2>
+<div class="phogobox">
+<foreach name="lists" item="vo">
+      <php>
+          $smeta=json_decode($vo['smeta'], true);
+      </php>
+<dl><dt><img src="/hwtm/data/upload/{:sp_get_asset_upload_path($smeta['thumb'])}" style='width:210px;height:141px'/></dt><dd>{$vo.post_title}</dd></dl>
+</foreach>
+</div>
+
+<!--分页-->
+{$link}
+<!--分页 end-->
+</ul>
+</div>
+<div class="clear"></div>
+</div>
+
+<!--底部-->
+<div id="footer">
+<include file="public/footbox" />
+</div>
+<!--底部 end-->
+
+<!--背景层-->
+<div id="bg" class="bg" style="display:none;"></div>
+<iframe id="popIframe" class="popIframe" frameborder="0" ></iframe>
+<!--背景层-->
+
+</body>
+</html>

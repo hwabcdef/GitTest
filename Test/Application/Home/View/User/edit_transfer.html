@@ -1,0 +1,37 @@
+<include file="public/m_header" />
+        <div class="m_content">
+        	<div class="content_title"><h2>发布转让</h2><div class="net_add"><i></i>您想在的位置是：个人中心 &gt; 商标管理 &gt; 修改发布转让</div></div>
+            <div class="content_box">
+            	<div class="transfer">
+                	<div class="note"><b>注意一：</b>必填项必填，否则无法发布；<br/><b>注意二：</b>如果不记得注册号，可以点击这个链接查询你自已的商标<a href="http://cx.ipsoon.cn">http://cx.ipsoon.cn</a>；</div>
+<form action="{:U('User/domod_transfer',array('id'=>$data['id']))}" method="post">
+                	<div class="ccc">
+                    	<div class="aaa">
+                            <p><em><i style="color:#F00">*</i> 类&nbsp;&nbsp;&nbsp;&nbsp;别</em>
+                            <select class="n_select" name="cate_id">
+<foreach name="sblist" item="vo">
+<php>
+$num=($data['cate_id']==$key)?'selected':'';
+</php>
+<option value="{$key}" {$num}>第{$key}类-{$vo}</option>
+</foreach>
+                            </select></p>
+                            <p><em><i style="color:#F00">*</i> 名&nbsp;&nbsp;&nbsp;&nbsp;称</em><input type="text" class="buy_input" name="tm_name" value="{$data.tm_name}">例：洛朗骑士</p>
+                            <p><em><i style="color:#F00">*</i>&nbsp;&nbsp;注册号</em><input type="text" class="buy_input" name="regnum" value="{$data.regnum}">例：1589898</p>
+                            <p><em><i style="color:#F00">*</i>&nbsp;&nbsp;申请人</em><input type="text" class="buy_input" name="applicant" value="{$data.applicant}">例：xx有限公司</p>
+                            <p><em><i style="color:#F00">*</i> 价&nbsp;&nbsp;&nbsp;&nbsp;格</em><input type="text" class="buy_input" name="price" value="{$data.price}">例：2万/面议</p>
+                            <p><em>备&nbsp;&nbsp;&nbsp;&nbsp;注</em><textarea name="note">{$data.note}</textarea></p>
+                        </div>
+                    </div>
+                    <div class="bbb">
+                    	<p><input type="submit" value="提交" class="transfer_but"></p>
+                    </div>
+					</form>
+                </div>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+</body>
+</html>

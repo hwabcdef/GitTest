@@ -1,0 +1,327 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$tmpl_info.title}</title>
+<meta name="Keywords" content="{$tmpl_info.keywords}" />
+<meta name="Description" content="{$tmpl_info.description}" />
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/main.css">
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/tmStyle.css">
+<script type="text/javascript" src="{:C('HTMLPATH')}js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/common.js"></script>
+
+<link rel="shortcut icon" href="../favicon.ico" type="image/x-icon" />
+<script type="text/javascript">
+var trace_page_on = "{$trace_page_arr.on}";
+if(trace_page_on){
+function trace_close_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+function trace_update_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"type=1&id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+window.onbeforeunload = function(){
+	trace_close_time();
+}
+var time_limit_tmp = "{$trace_page_arr.limit_time|default=10000}";
+time_limit_tmp = parseInt(time_limit_tmp);
+time_limit_tmp = time_limit_tmp * 1000;
+setInterval(trace_update_time, time_limit_tmp);
+}
+</script>
+</head>
+
+<body>
+<!--图形编码-->
+<div id="graphicPop" class="ondiv" style="display:none;">
+<div class="content">
+<h2><span class="close"><input type="button" id="" value="" class="closebtn" title="关闭" subkey='25code' /></span>选择图形编码</h2>
+<ul class="tree">
+<volist name='txcode' id='vo'>
+<php>
+	$checked=(in_array($key,explode(',',$con['25code'])))?'checked="checked"':'';
+</php>
+<li><label><input type="checkbox" getkey='25code' value="{$key}" {$checked}> {$key} {$vo.name}</label>
+<ul style="display:none;" attr_ul='toggle_ul'>
+<php>$upkey=$key;</php>
+<volist name='vo.down' id='vod'>
+<li>{$upkey}.{$key} {$vod}</li>	
+</volist>
+</ul>
+</li>
+</volist>
+</ul>
+<p class="ptrbtm"><input type="button" subkey='25code' value="确定" class="btn"  /></p>
+</div>
+</div>
+<script type="text/javascript">
+$(function(){
+	$('[getkey=25code]').click(function(){
+		var ul = $(this).parent().parent().find('ul');
+		if(!$(this).attr('checked')){
+			//ul.show();
+			ul.toggle('slow');
+		}else{
+			//ul.hide();
+			ul.toggle('slow');
+		}
+	});
+	$('[attr_ul=toggle_ul]').click(function(){$(this).toggle('slow');});
+});
+</script>
+<!--图形编码 end-->
+
+<div class="header">
+<div id="site-nav">
+<ul class="leftsite">
+<include file="public/usersession" />
+<include file="public/header_nav" />
+</div>
+
+<div class="clear"></div>
+
+<include file="public/header" />
+
+<div class="clear"></div>
+<!--导航 Start-->
+<div class="menubox">
+<div class="all-sort1">
+<h2 id="div_h2" >适用行业分类 <img id="img1" src="{:C('HTMLPATH')}images/ico_down.png" align="absmiddle"></h2>
+<div class="showbox" id="tip1" style="display:none;">
+<!--所有分类 Start-->
+<div class="all-sort-list">
+<include file="public/fenlei" />
+</div>
+<!--所有分类 End-->
+</div>
+</div>
+<div class="nav">
+<ul class="clearfix">
+<include file="public/nav" />
+</ul>
+</div>
+</div>
+<!--导航 End-->
+</div>
+
+<div class="mainbox">
+<ul id="crumbs">您所在的位置：<a href="{:C('INDEXPATH')}">首页</a> &gt; 第十版《类似商标和服务分类表》<i class="slipbox" data-kone="cate">查看商品分类表
+<div class="slipmore" style="display:none;">
+<ul class="catebox">
+<volist name='sblist' id='vo'>
+<a href="{:U('Index/tmclass',array('id'=>$key))}">{$key}-{$vo}</a>
+</volist>
+
+</ul>
+</div>
+</i></ul>
+
+<div class="classbox">
+<ul class="pad">
+<!--商标分类搜索-->
+<div class="clatabox">
+<div class="title">
+<dl>
+<dt id="norTabBox1" onclick="setTab('norTabBox',1,4)" <if condition='$_POST[1] neq ""'>class="hover"</if>>商标分类</dt>
+<dt id="norTabBox2" onclick="setTab('norTabBox',2,4)" <if condition='$_POST[2] neq ""'>class="hover"</if>>商标群组</dt>
+<dt id="norTabBox3" onclick="setTab('norTabBox',3,4)" <if condition='$_POST[3] neq ""'>class="hover"</if>>商品名称</dt>
+
+</dl>
+</div>
+</div>
+<form method="post">
+<div id="con_norTabBox_1" class="clatable" <if condition='$_POST[1] neq ""'>style="display:block;"<else />style="display:none;"</if>>
+<ul class="search">
+<input type="text" value="{$_POST['typec']|default='请输入关键字或ID'}" name='typec' onfocus="if(this.value==this.attributes.attr_val.value)this.value='';" onblur="if(!this.value)this.value=this.attributes.attr_val.value;" attr_val="请输入关键字或ID" class="ipt"/>
+<input type="submit" name="1" value="点击查询" class="btn" />
+</ul>
+</div>
+<div id="con_norTabBox_2" class="clatable" <if condition='$_POST[2] neq ""'>style="display:block;"<else />style="display:none;"</if>>
+<ul class="search">
+<input type="text" value="{$_POST['typey']|default='请输入关键字或ID'}" name='typey'  onfocus="if(this.value==this.attributes.attr_val.value)this.value='';" onblur="if(!this.value)this.value=this.attributes.attr_val.value;" attr_val="请输入关键字或ID" class="ipt"/>
+<input type="submit" name="2" value="点击查询" class="btn"  />
+</ul>
+</div>
+<div id="con_norTabBox_3" class="clatable" <if condition='$_POST[3] neq ""'>style="display:block;"<else />style="display:none;"</if>>
+<ul class="search">
+<input type="text" value="{$_POST['typesp']|default='请输入关键字或ID'}" name='typesp' onfocus="if(this.value==this.attributes.attr_val.value)this.value='';" onblur="if(!this.value)this.value=this.attributes.attr_val.value;" attr_val="请输入关键字或ID" class="ipt"/>
+<input type="submit" name="3" value="点击查询" class="btn" />
+</ul>
+</div>
+<div id="con_norTabBox_4" class="clatable" <if condition='$_POST[4] neq ""'>style="display:block;"<else />style="display:none;"</if>>
+<ul class="search">
+<input type="text" value="{$_POST['typetx']|default='请输入商标图形编码'}" name='typetx' onfocus="if(this.value==this.attributes.attr_val.value)this.value='';" onblur="if(!this.value)this.value=this.attributes.attr_val.value;" attr_val="请输入商标图形编码" class="ipt"/>
+<input type="submit" name="4" value="点击查询" class="btn" />
+<a href="###" class="blue" onclick="showDiv('graphicPop')">选择图形编码</a>
+</ul>
+</div>
+</form>
+<!--商标分类搜索 end-->
+<if condition='$re eq 0'>
+	现在出不了数据!
+</if>
+<if condition='$info neq "" AND $_POST[1] neq ""'>
+	<div class="clatable" >
+<div class="subContent" id="more11">
+<if condition='$re1 neq ""'>
+<p>系统猜您想搜索的是第{$re1.cate_id}类,点击访问该分类：<a href="{:U('Index/tmclass',array('id'=>$re1['cate_id']))}">{$re1.cate_name}</a> | <a href="{:U('Index/tmtype',array('id'=>$re1['cate_id']))}">{$re1.cate_id}类群组列表</a></p>
+</if>
+<p>您搜索的"<b>{$con}</b>"出现在以下类别，类别：
+<volist name='info' id='vo'>
+	<a href="{:U('Index/tmclass',array('id'=>$key))}">{$vo.cate_name}</a>(<a href="{:U('Index/tmtype',array('id'=>$key))}">{$vo.cate_id}类群组列表</a>)
+</volist>
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="int_Table">
+<tr>
+<th >&nbsp;</th>
+<th>所属类别</th>
+<th>类似群组</th>
+<th>商品/服务名称</th>
+<th>备注</th>
+</tr>
+<volist name='info' id='vo'>
+<tr>
+<td align="center">{$i}</td>
+<td align="center"><a href="{:U('Index/tmclass',array('id'=>$vo['cate_id']))}">第{$key}类</a></td>
+<td align="center"><a href="{:U('Index/tmtype',array('id'=>$vo['cate_id']))}">点击查看群组列表</a></td>
+<td>{$vo.cate_name}</td>
+<td>{$vo.info}</td>
+</tr>
+
+</volist>
+
+
+<tr>
+
+</table>
+</div>
+</div>
+</if>
+
+<if condition='$info neq "" AND $_POST[2] neq ""'>
+	<div class="clatable" >
+<div class="subContent" id="more11">
+<if condition='$re1 neq ""'>
+<p>系统猜您想搜索的是{$re1.group_id},点击访问该群组：<a href="{:U('Index/tmclassg',array('id'=>$re1['group_id']))}">{$re1.group_id}</a> | <a href="{:U('Index/tmgroup',array('id'=>$re1['group_id']))}">{$re1.group_id}群组产品列表</a></p>
+</if>
+<p>您搜索的"<b>{$con}</b>"出现在以下类别，类别：
+<volist name='info' id='vo'>
+	<a href="{:U('Index/tmclassg',array('id'=>$vo['group_id']))}">{$vo.group_id}</a>(<a href="{:U('Index/tmgroup',array('id'=>$vo['group_id']))}">{$vo.group_id}群组产品列表</a>)
+</volist>
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="int_Table">
+<tr>
+<th >&nbsp;</th>
+<th>所属类别</th>
+<th>产品列表</th>
+<th>群组编号</th>
+<th>备注</th>
+</tr>
+<volist name='info' id='vo'>
+<tr>
+<td align="center">{$i}</td>
+<td align="center"><a href="{:U('Index/tmclass',array('id'=>$vo['type_id']))}">第{$vo.type_id}类</a></td>
+<td align="center"><a href="{:U('Index/tmgroup',array('id'=>$vo['group_id']))}">点击查看产品列表</a></td>
+<td>{$vo.group_id}</td>
+<td>{$vo.title}</td>
+</tr>
+
+</volist>
+
+
+<tr>
+
+</table>
+</div>
+</div>
+</if>
+
+<if condition='$info neq "" AND $_POST[3] neq ""'>
+	<div class="clatable" >
+<div class="subContent" id="more11">
+<if condition='$re1 neq ""'>
+<p>系统猜您想搜索的是{$re1.proname_china},点击访问该群组：<a href="{:U('Index/tmgroup',array('id'=>$re1['group_id']))}">{$re1.group_id}</a> | <a href="{:U('Index/tmgroup',array('id'=>$re1['group_id']))}">{$re1.group_id}群组产品列表</a></p>
+</if>
+<p>您搜索的"<b>{$con}</b>"出现在以下类别，类别：
+<volist name='info' id='vo'>
+	<a href="{:U('Index/tmclass',array('id'=>$key))}">{$vo.proname_china}</a>(<a href="{:U('Index/tmtype',array('id'=>$key))}">{$vo.group_id}群组产品列表</a>)
+</volist>
+</p>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="int_Table">
+<tr>
+<th >&nbsp;</th>
+<th width='100'>所属类别</th>
+<th width='80'>所属群组</th>
+<th width='200'>产品名称</th>
+<th width=''>产品英文</th>
+<th width='200'>备注</th>
+</tr>
+<volist name='info' id='vo'>
+<tr>
+<td align="center">{$i}</td>
+<td align="center"><a href="{:U('Index/tmclass',array('id'=>$vo['type_id']))}">第{$vo.typegroup_id}类</a></td>
+<td align="center"><a href="{:U('Index/tmtype',array('id'=>$vo['group_id']))}">{$vo.pro_num}</a></td>
+<td>{$vo.proname_china}</td>
+<td>{$vo.proname_english}</td>
+<td>{$vo.pro_content}</td>
+</tr>
+
+</volist>
+
+
+<tr>
+
+</table>
+</div>
+</div>
+</if>
+</ul>
+</div>
+<!--商标分类表-->
+<div class="cationbox">
+<ul>
+<volist name='fenlei_all' id='vo'  offset="0" length='45' >
+<li><span class="ico<gt name='key' value='10'>{$key}<else />0{$key}</gt>"></span>
+<dl>
+<a href="<php>$urlname='Index/tmtype?id='.$key;echo U($urlname);</php>">
+<p>第<gt name='key' value='10'>{$key}<else />0{$key}</gt>类-{$vo.cate_name}</p>
+{$vo.info}
+</dl></li>
+</volist>
+</ul>
+</div>
+<!--商标分类表 end-->
+<div class="clear"></div>
+</div>
+<!--底部-->
+<div id="footer">
+<include file="public/flink" />
+<include file="public/footbox" />
+</div>
+<!--底部 end-->
+
+<script type="text/javascript" src="{:C('HTMLPATH')}js/jquery-layer.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/leftmenu.js"></script>
+
+<!--背景层-->
+<div id="bg" class="bg" style="display:none;"></div>
+<iframe id="popIframe" class="popIframe" frameborder="0" ></iframe>
+<!--背景层-->
+
+</body>
+</html>

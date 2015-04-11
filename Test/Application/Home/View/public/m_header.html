@@ -1,0 +1,75 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<title>{$tmpl_info.title}</title>
+<meta name="Keywords" content="{$tmpl_info.keywords}" />
+<meta name="Description" content="{$tmpl_info.description}" />
+
+<link rel="stylesheet" href="{:C('HTMLPATH')}css/memberStyle.css">
+<script language="javascript" src="{:C('HTMLPATH')}js/admin.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/jquery-1.7.1.js"></script>
+<script type="text/javascript" src="{:C('HTMLPATH')}js/common.js"></script>
+<script language="javascript" src="{:C('HTMLPATH')}js/jquery-1.4.2.min.js"></script>
+<script language="javascript" src="{:C('HTMLPATH')}js/admin.js"></script>
+<link rel="shortcut icon" href="{:C('HTMLPATH')}favicon.ico" type="image/x-icon" />
+<script type="text/javascript">
+var trace_page_on = "{$trace_page_arr.on}";
+if(trace_page_on){
+function trace_close_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+function trace_update_time(){
+	$.ajax({
+		type:"POST",
+		url:"{:U('Index/traceUrl')}",
+		async: false,
+		data:"type=1&id={$trace_page_arr.trace_id}",
+		success: function(result){
+			}
+	});
+}
+window.onbeforeunload = function(){
+	trace_close_time();
+}
+var time_limit_tmp = "{$trace_page_arr.limit_time|default=10000}";
+time_limit_tmp = parseInt(time_limit_tmp);
+time_limit_tmp = time_limit_tmp * 1000;
+setInterval(trace_update_time, time_limit_tmp);
+}
+</script>
+</head>
+
+<body>
+<div id="containner">
+<div class="m_header">
+<div class="header_left"><a href="{:C('INDEXPATH')}"><img src="{:C('HTMLPATH')}images/ad_logo.gif"></a></div>
+<div class="header_title"><i></i><span>{$Think.session.nick}</span> 您好！欢迎光临华唯商标转让网（hw-tm.com）会员管理系统。</div><div class="clear"></div>
+<div class="header_nav"><a href="{:U('User/info')}" class="on">会员中心</a><a href="http://www.hw-tm.cn" target="_blank">华唯首页</a><a href="http://bbs.hw-tm.cn" target="_blank">华唯论坛</a><a href="{:U('User/logout')}">退出</a></div>
+</div>
+<div class="clear"></div>
+<div class="memberMain">
+<dl class="subnav">
+<div class="sss">
+<dt><a href="javascript:void(0)"><i></i>商标管理</a></dt>
+<dd><a href="{:U('User/transfer')}">发布转让</a></dd>
+<dd><a href="{:U('User/transfer_mana')}">转让管理</a></dd>
+<dd><a href="{:U('User/buy')}">发布求购</a></dd>
+<dd><a href="{:U('User/buy_mana')}">求购管理</a></dd>
+<dd><a href="{:U('User/collection')}">我的收藏</a></dd>
+</div>
+<div class="sss">
+<dt><a href="javascript:void(0)"><i></i>资料管理</a></dt>
+<dd><a href="{:U('User/info')}">个人资料</a></dd>
+<dd><a href="{:U('User/password')}">修改密码</a></dd>
+</div>
+</dl>
